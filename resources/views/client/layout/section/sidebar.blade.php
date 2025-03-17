@@ -22,15 +22,6 @@
                         </div>
                     </li>
                     <li class="sidebar-list"><i class="fa-solid fa-thumbtack"></i><a
-                            class="sidebar-link sidebar-title link-nav active" href="/staff/absensi">
-                            <svg class="stroke-icon">
-                                <use href="../assets/svg/icon-sprite.svg#stroke-reports"></use>
-                            </svg>
-                            <svg class="fill-icon">
-                                <use href="../assets/svg/icon-sprite.svg#stroke-reports"></use>
-                            </svg><span>Absensi</span></a>
-                    </li>
-                    <li class="sidebar-list"><i class="fa-solid fa-thumbtack"></i><a
                             class="sidebar-link sidebar-title link-nav active" href="/staff/profile">
                             <svg class="stroke-icon">
                                 <use href="../assets/svg/icon-sprite.svg#stroke-user"></use>
@@ -40,13 +31,13 @@
                             </svg><span>Profile</span></a>
                     </li>
                     <li class="sidebar-list"><i class="fa-solid fa-thumbtack"></i><a
-                            class="sidebar-link sidebar-title link-nav" href="/staff/rekap-penilaian">
+                            class="sidebar-link sidebar-title link-nav active" href="/staff/absensi">
                             <svg class="stroke-icon">
-                                <use href="../assets/svg/icon-sprite.svg#stroke-charts"></use>
+                                <use href="../assets/svg/icon-sprite.svg#stroke-reports"></use>
                             </svg>
                             <svg class="fill-icon">
-                                <use href="../assets/svg/icon-sprite.svg#stroke-charts"></use>
-                            </svg><span>Riwayat Absensi dan Penilaian</span></a>
+                                <use href="../assets/svg/icon-sprite.svg#stroke-reports"></use>
+                            </svg><span>Absensi</span></a>
                     </li>
                 </ul>
             </div>
