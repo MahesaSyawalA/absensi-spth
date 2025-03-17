@@ -114,7 +114,6 @@
     <!-- Sidebar jquery-->
     <script src="../assets/js/config.js"></script>
     <!-- Plugins JS start-->
-    @section('scriptPlugins')
     <script src="../assets/js/sidebar-menu.js"></script>
     <script src="../assets/js/sidebar-pin.js"></script>
     <script src="../assets/js/slick/slick.min.js"></script>
@@ -128,6 +127,8 @@
     <script src="../assets/js/typeahead/typeahead.custom.js"></script>
     <script src="../assets/js/typeahead-search/handlebars.js"></script>
     <script src="../assets/js/typeahead-search/typeahead-custom.js"></script>
+    @section('scriptPlugins')
+
     @show
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
