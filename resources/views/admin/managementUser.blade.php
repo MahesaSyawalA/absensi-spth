@@ -15,6 +15,7 @@
         <div class="card">
             <div class="card-header pb-0 card-no-border">
                 <h5>Table Data User</h5>
+                <button class="">Add new Pegawai</button>
             </div>
             <div class="card-body">
                 <div class="table-responsive custom-scrollbar">
