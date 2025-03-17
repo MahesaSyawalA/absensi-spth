@@ -4,12 +4,15 @@ use App\Http\Controllers\Admin\KriteriaPenilaianController;
 use App\Http\Controllers\Admin\RekapPenilaianController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\AuthSessionController;
 use App\Http\Controllers\Client\AbsensiController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/login', [AuthSessionController::class,'index']) ->name('auth.index');
 
 // Route::get('/admin', [AdminController::class,'index']);
 Route::get('/admin/management-user', [UserController::class,'index']) ->name('user.index');
