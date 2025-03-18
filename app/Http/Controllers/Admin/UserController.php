@@ -17,4 +17,16 @@ class UserController extends Controller
         ];
         return view('admin.managementUser', $data);
     }
+
+    public function destroy($nip)
+    {
+        $user = User::where('nip', $nip)->first();
+
+        if ($user) {
+            $user->delete();
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false], 404);
+    }
 }

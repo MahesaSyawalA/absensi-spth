@@ -17,6 +17,7 @@ Route::get('/login', [AuthSessionController::class,'index']) ->name('auth.index'
 
 // Route::get('/admin', [AdminController::class,'index']);
 Route::get('/admin/management-user', [UserController::class,'index']) ->name('user.index');
+Route::delete('/users/{nip}', [UserController::class, 'destroy'])->name('users.destroy');
 Route::get('/admin/rekap-penilaian', [RekapPenilaianController::class,'index']);
 Route::get('/admin/kriteria-penilaian', [KriteriaPenilaianController::class,'index']);
 
