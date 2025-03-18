@@ -25,6 +25,10 @@ class User extends Authenticatable
         'jabatan',
         'barcode',
         'jabatan',
+        'tanggal_lahir',
+        'status_pegawai',
+        'foto',
+        'role',
     ];
 
     /**
