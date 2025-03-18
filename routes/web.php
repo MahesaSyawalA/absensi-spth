@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthSessionController;
 use App\Http\Controllers\Client\AbsensiController;
+use App\Http\Controllers\Client\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,3 +21,4 @@ Route::get('/admin/rekap-penilaian', [RekapPenilaianController::class,'index']);
 Route::get('/admin/kriteria-penilaian', [KriteriaPenilaianController::class,'index']);
 
 Route::get('/staff/absensi',[AbsensiController::class, 'index']);
+Route::get('/staff/profile',[ProfileController::class, 'index']);
