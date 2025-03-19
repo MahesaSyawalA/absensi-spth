@@ -44,7 +44,6 @@
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="../assets/css/responsive.css">
 </head>
-
 <body class="horizontal-page">
     <!-- loader starts-->
     <div class="loader-wrapper">
@@ -85,9 +84,9 @@
                     <div class="logo-wrapper"><a href="index.html"><img class="img-fluid for-light"
                                 src="../images/SPTH.png" alt=""><img class="img-fluid for-dark"
                                 src="../images/SPTH.png" alt=""></a></div>
-                    <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle"
+                    {{-- <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle"
                             data-feather="align-center"></i>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="nav-right col-xxl-7 col-xl-6 col-md-7 col-8 pull-right right-header p-0 ms-auto">
                     <ul class="nav-menus">
@@ -96,28 +95,6 @@
                                 <svg id="maximize-screen">
                                     <use href="../assets/svg/icon-sprite.svg#full-screen"></use>
                                 </svg></span></li>
-
-                        {{-- <li>
-                            <div class="mode">
-                                <svg>
-                                    <use href="../assets/svg/icon-sprite.svg#moon"></use>
-                                </svg>
-                            </div>
-                        </li> --}}
-                        {{-- <li class="profile-nav onhover-dropdown pe-0 py-0">
-                            <div class="d-flex profile-media"><img class="b-r-10"
-                                    src="../assets/images/dashboard/profile.png" alt="">
-                                <div class="flex-grow-1"><span>Emay Walter</span>
-                                    <p class="mb-0">Admin <i class="middle fa-solid fa-angle-down"></i></p>
-                                </div>
-                            </div>
-                            <ul class="profile-dropdown onhover-show-div">
-                                <li><a href="../template/sign-up.html"><i data-feather="user"></i><span>Account
-                                        </span></a></li>
-                                <li><a href="../template/login.html"><i data-feather="log-in"> </i><span>Log
-                                            out</span></a></li>
-                            </ul>
-                        </li> --}}
                     </ul>
                 </div>
                 <script class="result-template" type="text/x-handlebars-template">
@@ -135,13 +112,10 @@
         <!-- Page Header Ends-->
 
         <!-- Page Body Start-->
-        <div class="page-body-wrapper">
-            <div id="sidebar-landing" class="sidebar-wrapper" data-sidebar-layout="stroke-svg">
-            </div>
-
+        <div class="">
             <!-- Page Sidebar Ends-->
             <div class="page-body" style="background-color: white">
-                <div class="container-fluid pt-4">
+                <div class="container-fluid mt-5 pt-4">
                     <div class="card py-5 d-flex flex-column align-items-center justify-content-center" style="background-image: url('/images/bg.webp'); background-repeat: no-repeat; background-position: top;">
                         <div class="d-flex align-items-center py-4 gap-4">
                             <img src="/images/logo_jabar.png" style="max-width: 113px;" alt="">
@@ -171,6 +145,45 @@
                                 <canvas id="myBarGraph2"></canvas>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="container mt-5">
+                        <h1 class="text-center mb-4">Daftar Staff</h1>
+
+                        <div class="row">
+                            @foreach ($staffs as $staff)
+                                <div class="col-md-6 col-lg-4 mb-4 d-flex align-items-stretch">
+                                    <div class="card w-100">
+                                        <!-- Foto Staff -->
+                                        <img src="{{ asset('storage/' . $staff->photo) }}" class="card-img-top" alt="{{ $staff->nama }}" style="height: 200px; object-fit: cover;">
+
+                                        <div class="card-body d-flex flex-column">
+                                            <!-- Nama Staff -->
+                                            <h5 class="card-title">{{ $staff->nama }}</h5>
+
+                                            <!-- Jabatan -->
+                                            <p class="card-text">
+                                                <strong>Jabatan:</strong> {{ $staff->jabatan }}
+                                            </p>
+
+                                            <!-- Email -->
+                                            <p class="card-text">
+                                                <strong>Email:</strong> {{ $staff->email }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <!-- Pagination (jika menggunakan paginate) -->
+                        {{-- @if ($staffs->hasPages())
+                            <div class="d-flex justify-content-center mt-4">
+                                {{ $staffs->links() }}
+                            </div>
+                        @endif --}}
                     </div>
                 </div>
                 <!-- Container-fluid body Ends-->
