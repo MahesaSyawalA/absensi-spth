@@ -12,4 +12,7 @@ class AbsensiController extends Controller
         return view('client.absensi',$data);
     }
 
+    public function absen() {
+        return view('client.scanqr');
+    }
 }

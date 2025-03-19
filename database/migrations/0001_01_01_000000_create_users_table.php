@@ -14,10 +14,13 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->string('nip')->primary()->unique();
             $table->string('nama');
-            $table->timestamp('jabatan');
-            $table->string('foto');
-            $table->string('status');
-            $table->string('barcode');
+            $table->string('jabatan');
+            $table->date('tanggal_lahir');
+            $table->enum('status_pegawai', ['ASN', 'Non ASN']);
+            $table->enum('jenis_kelamin', ['Laki laki', 'Perempuan']);
+            $table->text('foto');
+            $table->text('barcode');
+            $table->enum('role', ['superadmin', 'admin', 'pegawai']);
             $table->rememberToken();
             $table->timestamps();
         });
