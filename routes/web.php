@@ -3,10 +3,10 @@
 use App\Http\Controllers\Admin\KriteriaPenilaianController;
 use App\Http\Controllers\Admin\RekapPenilaianController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthSessionController;
 use App\Http\Controllers\Client\AbsensiController;
 use App\Http\Controllers\Client\ProfileController;
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\SanitizeInput;
 use Illuminate\Support\Facades\Route;
 
@@ -29,7 +29,7 @@ Route::delete('/kriteria/{id}', [KriteriaPenilaianController::class, 'destroy'])
 Route::post('/sub-kriteria', [KriteriaPenilaianController::class, 'storeSubKriteria'])->middleware('sanitize')->name('subKriteria.store');
 Route::delete('/sub-kriteria/{id}', [KriteriaPenilaianController::class, 'destroySubKriteria'])->name('subKriteria.destroy');
 
-Route::get('/admin/rekap-penilaian', [RekapPenilaianController::class, 'index']);
+Route::get('/admin/rekap-penilaian', [RekapPenilaianController::class, 'index'])->middleware('is_admin');
 Route::get('/admin/kriteria-penilaian', [KriteriaPenilaianController::class, 'index']);
 
 Route::get('/staff/absensi', [AbsensiController::class, 'index']);

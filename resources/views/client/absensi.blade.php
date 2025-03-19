@@ -41,7 +41,7 @@
                             <p class="card-text">Silakan lakukan absensi dengan menekan tombol di bawah.</p>
 
                             <!-- Tombol Aksi untuk Absensi -->
-                            <a href="/scan-qr" class="btn btn-primary">
+                            <a href="/staff/absen-scan" class="btn btn-primary">
                                 <i class="fas fa-qrcode"></i> Absen Sekarang
                             </a>
                         </div>
