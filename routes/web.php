@@ -11,7 +11,7 @@ use App\Http\Middleware\SanitizeInput;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Route::get('/login', [AuthSessionController::class, 'index'])->name('auth.index');
