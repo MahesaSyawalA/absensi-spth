@@ -17,12 +17,18 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    protected $primaryKey = 'nip';
+    public $incrementing = false;
     protected $fillable = [
         'nip',
         'nama',
         'jabatan',
         'barcode',
         'jabatan',
+        'tanggal_lahir',
+        'status_pegawai',
+        'foto',
+        'role',
     ];
 
     /**
