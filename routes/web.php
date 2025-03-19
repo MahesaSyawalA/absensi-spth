@@ -28,7 +28,7 @@ Route::delete('/kriteria/{id}', [KriteriaPenilaianController::class, 'destroy'])
 Route::post('/sub-kriteria', [KriteriaPenilaianController::class, 'storeSubKriteria'])->middleware('sanitize')->name('subKriteria.store');
 Route::delete('/sub-kriteria/{id}', [KriteriaPenilaianController::class, 'destroySubKriteria'])->name('subKriteria.destroy');
 
-Route::get('/admin/rekap-penilaian', [RekapPenilaianController::class, 'index'])->middleware('is_admin');
+Route::get('/admin/rekap-penilaian', [RekapPenilaianController::class, 'index']);
 Route::get('/admin/kriteria-penilaian', [KriteriaPenilaianController::class, 'index']);
 
 Route::get('/staff/absensi', [AbsensiController::class, 'index']);

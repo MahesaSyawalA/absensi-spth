@@ -33,17 +33,22 @@
                     <div class="card h-100">
                         <div class="card-body text-center">
                             <!-- Foto User -->
-                            <img src="/images/user.jpg" alt="User Image" class="img-fluid rounded-circle mb-3" width="100"
-                                height="100">
+                            <img src="/images/user.jpg" alt="User Image" class="img-fluid rounded-circle mb-3"
+                                width="100" height="100">
 
                             <!-- Tulisan Selamat Datang -->
                             <h5 class="card-title">Selamat Datang</h5>
                             <p class="card-text">Silakan lakukan absensi dengan menekan tombol di bawah.</p>
 
-                            <!-- Tombol Aksi untuk Absensi -->
+                            {{-- LINK AKSI UNTUK ABSENSI --}}
                             <a href="/staff/absen-scan" class="btn btn-primary">
-                                <i class="fas fa-qrcode"></i> Absen Sekarang
+                                <div id="button-attendance-text" style="display: flex; gap: 10px">
+                                    <i class="fas fa-qrcode" style="margin-block: auto"></i>
+                                    <span>Absen Sekarang</span>
+                                </div>
+                                <div id="spinner" class="custom-loader" style="margin-inline: auto; display: none;"></div>
                             </a>
+                            <div id="result"></div>
                         </div>
                     </div>
                 </div>
@@ -257,6 +262,7 @@
         function updateClock() {
             const clockElement = document.getElementById('clock');
             const now = new Date();
+            now.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' })
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');

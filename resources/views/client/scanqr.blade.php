@@ -7,39 +7,55 @@
 @endsection
 
 @section('content')
-<h2>Scan QR to Check Attendance</h2>
-    <button onclick="scanQRCode()">Scan QR Code</button>
+    <div id="spinner" class="custom-loader" style="margin-inline: auto; display: flex;"></div>
+    <div id="result" class="f-20 text-center"></div>
+    <div id="latlon" class="f-15 m-t-5 text-center"></div>
+    <div id="time" class="f-15 m-t-5 text-center"></div>
+
+    <a href="/staff/absensi" class="btn btn-primary" id="back-to-prevpage" style="display: none; width: 50%; margin-inline: auto; margin-top: 20px">Kembali ke halaman absensi utama</>
 
     <script>
-        function scanQRCode() {
+        window.onload = function() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         let latitude = position.coords.latitude;
                         let longitude = position.coords.longitude;
 
-                        // Send to Laravel backend
+                        document.getElementById("spinner").style.display = "block";
+                        document.getElementById("result").innerText = "";
+                        document.getElementById("latlon").innerText = "";
+                        document.getElementById("time").innerText = "";
+                        document.getElementById("back-to-prevpage").style.display = "none";
+
                         fetch('/api/attendance', {
-                            method: 'POST',
-                            headers: { 
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({
-                                latitude: latitude,
-                                longitude: longitude
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    latitude: latitude,
+                                    longitude: longitude
+                                })
                             })
-                        })
-                        .then(response => response.json())
-                        .then(data => alert(data.message))
-                        .catch(error => console.error('Error:', error));
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.message) {
+                                    document.getElementById("spinner").style.display = "none";
+                                    document.getElementById("result").innerText = data.message;
+                                    document.getElementById("latlon").innerText = `Lat: ${data.latitude}, Lon: ${data.longitude}`;
+                                    document.getElementById("time").innerText = data.time;
+                                    document.getElementById("back-to-prevpage").style.display = "block";
+                                }
+                            });
                     },
                     (error) => {
-                        alert('Error getting location: ' + error.message);
+                        alert('Gagal mendapatkan lokasi: ' + error.message);
                     }
                 );
             } else {
-                alert("Geolocation is not supported by this browser.");
+                alert("Geolocation tidak didukung oleh browser ini.");
             }
         }
     </script>

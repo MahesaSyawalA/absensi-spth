@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
-class AdminMiddleware
+class PegawaiMiddleware
 {
     /**
      * Handle an incoming request.
@@ -19,7 +19,7 @@ class AdminMiddleware
         $user = Auth::user(); 
 
         // Check if the user is an admin
-        if ($user && $user->role === 'admin') {
+        if ($user && $user->role === 'pegawai') {
             return $next($request);
         }
 
