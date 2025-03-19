@@ -32,6 +32,6 @@ Route::delete('/sub-kriteria/{id}', [KriteriaPenilaianController::class, 'destro
 Route::get('/admin/rekap-penilaian', [RekapPenilaianController::class, 'index']);
 Route::get('/admin/kriteria-penilaian', [KriteriaPenilaianController::class, 'index']);
 
-
 Route::get('/staff/absensi', [AbsensiController::class, 'index']);
+Route::get('/staff/absen-scan', [AbsensiController::class, 'absen']);
 Route::get('/staff/profile', [ProfileController::class, 'index']);
