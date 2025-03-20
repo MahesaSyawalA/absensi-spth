@@ -25,7 +25,7 @@ class UserController extends Controller
         // Validasi data
         $request->validate([
             'nip' => 'required|unique:users,nip|regex:/^[a-zA-Z0-9]+$/',
-            'nama' => 'required|string|regex:/^[a-zA-Z\s]+$/',
+            'nama' => 'required|string|regex:/^[a-zA-Z\s.,]+$/',
             'jabatan' => 'required|string|regex:/^[a-zA-Z\s]+$/',
             'tanggal_lahir' => 'required|date',
             'status_pegawai' => 'required|string|in:ASN,Non ASN',
@@ -77,12 +77,12 @@ class UserController extends Controller
             'user' => $user,
         ]);
     }
-    
+
     public function update(Request $request, $nip)
     {
         // Validasi data
         $request->validate([
-            'nama' => 'required|string|regex:/^[a-zA-Z\s]+$/',
+            'nama' => 'required|string|regex:/^[a-zA-Z\s.,]+$/',
             'jabatan' => 'required|string|regex:/^[a-zA-Z\s]+$/',
             'tanggal_lahir' => 'required|date',
             'status_pegawai' => 'required|string|in:ASN,Non ASN',
