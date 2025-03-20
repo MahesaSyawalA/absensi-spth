@@ -64,7 +64,7 @@
     <!-- page-wrapper Start-->
     <div class="page-wrapper horizontal-wrapper" id="pageWrapper">
         <!-- Page Header Start-->
-        <div class="page-header">
+        <div class="page-header px-0 px-md-4">
             <div class="header-wrapper row m-0 py-12">
                 <form class="form-inline search-full col" action="#" method="get">
                     <div class="form-group w-100">
@@ -82,19 +82,24 @@
                 </form>
                 <div class="header-logo-wrapper col-auto p-0">
                     <div class="logo-wrapper"><a href="index.html"><img class="img-fluid for-light"
-                                src="../images/SPTH.png" alt=""><img class="img-fluid for-dark"
-                                src="../images/SPTH.png" alt=""></a></div>
+                                src="/images/SPTH.png" alt=""><img class="img-fluid for-dark"
+                                src="/images/SPTH.png" alt=""></a></div>
                     {{-- <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle"
                             data-feather="align-center"></i>
                     </div> --}}
                 </div>
                 <div class="nav-right col-xxl-7 col-xl-6 col-md-7 col-8 pull-right right-header p-0 ms-auto">
                     <ul class="nav-menus">
-
-                        <li class="fullscreen-body"> <span>
+                        <li class=" px-3 py-2 rounded">
+                            <a href="/login"  style="">Berikan Penilaian</a>
+                        </li>
+                        <li class="bg-primary px-3 py-2 rounded">
+                            <a href="/login"  style="color: white; ">Login</a>
+                        </li>
+                        {{-- <li class="fullscreen-body"> <span>
                                 <svg id="maximize-screen">
                                     <use href="../assets/svg/icon-sprite.svg#full-screen"></use>
-                                </svg></span></li>
+                                </svg></span></li> --}}
                     </ul>
                 </div>
                 <script class="result-template" type="text/x-handlebars-template">
