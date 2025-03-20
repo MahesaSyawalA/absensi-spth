@@ -43,7 +43,35 @@
     <link id="color" rel="stylesheet" href="../assets/css/color-1.css" media="screen">
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="../assets/css/responsive.css">
+    <style>
+        /* Custom CSS untuk mengatur lebar maksimum gambar */
+        .max-w-md-113 {
+            max-width: 113px;
+        }
+        .max-w-sm-113 {
+            max-width: 250px;
+        }
+        .max-w-sm-75 {
+            max-width: 75px;
+        }
+
+        .max-w-xs-50 {
+            max-width: 50px;
+        }
+
+        /* Jika Anda ingin menambahkan breakpoint untuk layar besar (lg) */
+        @media (min-width: 992px) {
+            .max-w-lg-150 {
+                max-width: 100px;
+            }
+            .max-w-sm-113 {
+            max-width: 350px;
+        }
+        }
+    </style>
+
 </head>
+
 <body class="horizontal-page">
     <!-- loader starts-->
     <div class="loader-wrapper">
@@ -64,69 +92,39 @@
     <!-- page-wrapper Start-->
     <div class="page-wrapper horizontal-wrapper" id="pageWrapper">
         <!-- Page Header Start-->
-        <div class="page-header px-0 px-md-4">
-            <div class="header-wrapper row m-0 py-12">
-                <form class="form-inline search-full col" action="#" method="get">
-                    <div class="form-group w-100">
-                        <div class="Typeahead Typeahead--twitterUsers">
-                            <div class="u-posRelative">
-                                <input class="demo-input Typeahead-input form-control-plaintext w-100" type="text"
-                                    placeholder="Search Anything Here..." name="q" title="" autofocus>
-                                <div class="spinner-border Typeahead-spinner" role="status"><span
-                                        class="sr-only">Loading...</span></div><i class="close-search"
-                                    data-feather="x"></i>
-                            </div>
-                            <div class="Typeahead-menu"></div>
-                        </div>
-                    </div>
-                </form>
-                <div class="header-logo-wrapper col-auto p-0">
-                    <div class="logo-wrapper"><a href="index.html"><img class="img-fluid for-light"
-                                src="/images/SPTH.png" alt=""><img class="img-fluid for-dark"
-                                src="/images/SPTH.png" alt=""></a></div>
-                    {{-- <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle"
-                            data-feather="align-center"></i>
-                    </div> --}}
-                </div>
-                <div class="nav-right col-xxl-7 col-xl-6 col-md-7 col-8 pull-right right-header p-0 ms-auto">
-                    <ul class="nav-menus">
-                        <li class=" px-3 py-2 rounded">
-                            <a href="/login"  style="">Berikan Penilaian</a>
-                        </li>
-                        <li class="bg-primary px-3 py-2 rounded">
-                            <a href="/login"  style="color: white; ">Login</a>
-                        </li>
-                        {{-- <li class="fullscreen-body"> <span>
-                                <svg id="maximize-screen">
-                                    <use href="../assets/svg/icon-sprite.svg#full-screen"></use>
-                                </svg></span></li> --}}
-                    </ul>
-                </div>
-                <script class="result-template" type="text/x-handlebars-template">
-            <div class="ProfileCard u-cf">
-            <div class="ProfileCard-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-airplay m-0"><path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path><polygon points="12 15 17 21 7 21 12 15"></polygon></svg></div>
-            <div class="ProfileCard-details">
-            <div class="ProfileCard-realName">test</div>
-            </div>
-            </div>
-          </script>
-                <script class="empty-template" type="text/x-handlebars-template"><div class="EmptyMessage">Your search turned up 0 results. This most likely means the backend is down, yikes!</div></script>
-            </div>
-        </div>
 
+        <div class=" shadow-sm d-flex align-items-center justify-content-between p-3 px-2 px-md-4"
+            style="width:100%; ">
+            <div class="logo-wrapper">
+                <a href="/" class="d-none d-md-block">
+                    <img class="img-fluid for-light" src="/images/SPTH.png" alt="" style="width: 10vw;">
+                    <img class="img-fluid for-dark" src="/images/SPTH.png" alt="">
+                </a>
+            </div>
+            <ul class="d-flex ">
+                <li class=" px-3 py-2 rounded">
+                    <a href="/login" style="">Berikan Penilaian</a>
+                </li>
+                <li class="bg-primary px-3 py-2 rounded">
+                    <a href="/login" style="color: white; ">Login</a>
+                </li>
+
+            </ul>
+        </div>
         <!-- Page Header Ends-->
 
         <!-- Page Body Start-->
         <div class="">
             <!-- Page Sidebar Ends-->
             <div class="page-body" style="background-color: white">
-                <div class="container-fluid mt-5 pt-4">
-                    <div class="card py-5 d-flex flex-column align-items-center justify-content-center" style="background-image: url('/images/bg.webp'); background-repeat: no-repeat; background-position: top;">
-                        <div class="d-flex align-items-center py-4 gap-4">
-                            <img src="/images/logo_jabar.png" style="max-width: 113px;" alt="">
-                            <img src="/images/SPTH.png" alt="">
+                <div class="container-fluid mt-3">
+                    <div class="card pb-4  py-md-5 d-flex flex-column align-items-center justify-content-center"
+                        style="background-image: url('/images/bg.webp'); background-repeat: no-repeat; background-position: top;">
+                        <div class="grid align-items-center py-4 gap-4">
+                            <img src="/images/logo_jabar.png" class="img-fluid max-w-lg-150 max-w-md-113 max-w-sm-75 " alt="Logo Jabar">
+                            <img src="/images/SPTH.png" class="img-fluid max-w-md-150 max-w-sm-113" alt="SPTH">
                         </div>
-                        <h1>Selamat Datang Di Website SIDIK SPTH </h1>
+                        <h1 class="text-center">Selamat Datang Di Website SIDIK SPTH </h1>
                     </div>
                 </div>
                 <!-- Container-fluid body starts-->
@@ -162,7 +160,8 @@
                                 <div class="col-md-6 col-lg-4 mb-4 d-flex align-items-stretch">
                                     <div class="card w-100">
                                         <!-- Foto Staff -->
-                                        <img src="{{ asset('storage/' . $staff->photo) }}" class="card-img-top" alt="{{ $staff->nama }}" style="height: 200px; object-fit: cover;">
+                                        <img src="{{ asset('storage/' . $staff->photo) }}" class="card-img-top"
+                                            alt="{{ $staff->nama }}" style="height: 200px; object-fit: cover;">
 
                                         <div class="card-body d-flex flex-column">
                                             <!-- Nama Staff -->
