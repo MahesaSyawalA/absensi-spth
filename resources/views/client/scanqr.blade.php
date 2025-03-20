@@ -12,11 +12,40 @@
     <div id="latlon" class="f-15 m-t-5 text-center"></div>
     <div id="time" class="f-15 m-t-5 text-center"></div>
 
-    <a href="/staff/absensi" class="btn btn-primary" id="back-to-prevpage" style="display: none; width: 50%; margin-inline: auto; margin-top: 20px">Kembali ke halaman absensi utama</>
+    <button id="retryButton" class="btn btn-primary" style="display: none; width: 50%; margin-inline: auto; margin-top: 20px">Ulangi</button>
+    <a href="/staff/absensi" class="btn btn-primary" id="back-to-prevpage" style="display: none; width: 50%; margin-inline: auto; margin-top: 50px">Kembali ke halaman absensi utama</>
 
-    <script>
-        window.onload = function() {
-            if (navigator.geolocation) {
+        <script>
+            document.getElementById("retryButton").addEventListener("click", function() {
+                checkGeolocationPermission();
+            });
+
+            async function checkGeolocationPermission() {
+                try {
+                    let permissionStatus = await navigator.permissions.query({
+                        name: 'geolocation'
+                    });
+
+                    if (permissionStatus.state === 'granted') {
+                        getLocation();
+                    } else if (permissionStatus.state === 'prompt') {
+                        getLocation();
+                    } else {
+                        alert("Akses lokasi tidak diizinkan. Harap izinkan akses pada browser.");
+                        document.getElementById("retryButton").style.display = "block";
+                    }
+
+                    permissionStatus.onchange = () => {
+                        if (permissionStatus.state === 'granted') {
+                            getLocation();
+                        }
+                    };
+                } catch (error) {
+                    console.error("Error memeriksa izin geolokasi: ", error);
+                }
+            }
+
+            function getLocation() {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         let latitude = position.coords.latitude;
@@ -54,16 +83,21 @@
                         alert('Gagal mendapatkan lokasi: ' + error.message);
                     }
                 );
-            } else {
-                alert("Geolocation tidak didukung oleh browser ini.");
             }
-        }
-    </script>
-@endsection
 
-@section('scriptPlugins')
-    <script src="../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
-    <script src="../assets/js/datatable/datatables/dataTables1.js"></script>
-    <script src="../assets/js/datatable/datatables/dataTables.bootstrap5.js"></script>
-    <script src="../assets/js/datatable/datatables/datatable.custom2.js"></script>
-@endsection
+            window.onload = function() {
+                if (navigator.geolocation) {
+                    checkGeolocationPermission();
+                } else {
+                    alert("Geolocation tidak didukung oleh browser ini.");
+                }
+            }
+        </script>
+    @endsection
+
+    @section('scriptPlugins')
+        <script src="../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
+        <script src="../assets/js/datatable/datatables/dataTables1.js"></script>
+        <script src="../assets/js/datatable/datatables/dataTables.bootstrap5.js"></script>
+        <script src="../assets/js/datatable/datatables/datatable.custom2.js"></script>
+    @endsection
