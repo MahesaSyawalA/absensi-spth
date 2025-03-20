@@ -103,7 +103,7 @@
             </div>
             <ul class="d-flex ">
                 <li class=" px-3 py-2 rounded">
-                    <a href="/login" style="">Berikan Penilaian</a>
+                    <a href="/penilaian-staff" style="">Berikan Penilaian</a>
                 </li>
                 <li class="bg-primary px-3 py-2 rounded">
                     <a href="/login" style="color: white; ">Login</a>
