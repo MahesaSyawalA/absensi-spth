@@ -8,8 +8,6 @@ use App\Http\Controllers\Auth\AuthSessionController;
 use App\Http\Controllers\Client\AbsensiController;
 use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\HomeController;
-use App\Http\Middleware\AdminMiddleware;
-use App\Http\Middleware\SanitizeInput;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
