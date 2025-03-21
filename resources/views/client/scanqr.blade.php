@@ -8,7 +8,7 @@
 
 @section('content')
     <div id="spinner" class="custom-loader" style="margin-inline: auto; display: flex;"></div>
-    <div id="result" class="f-20 text-center"></div>
+    <div id="result" class="f-20 text-center mx-5"></div>
     <div id="latlon" class="f-15 m-t-5 text-center"></div>
     <div id="time" class="f-15 m-t-5 text-center"></div>
 
@@ -73,8 +73,10 @@
                                 if (data.message) {
                                     document.getElementById("spinner").style.display = "none";
                                     document.getElementById("result").innerText = data.message;
-                                    document.getElementById("latlon").innerText = `Lat: ${data.latitude}, Lon: ${data.longitude}`;
-                                    document.getElementById("time").innerText = data.time;
+                                    if (data.latitude & data.longitude) {
+                                        document.getElementById("latlon").innerText = `Lat: ${data.latitude}, Lon: ${data.longitude}`;
+                                        document.getElementById("time").innerText = data.time;
+                                    }
                                     document.getElementById("back-to-prevpage").style.display = "block";
                                 }
                             });
