@@ -160,7 +160,7 @@
                                 <div class="col-md-6 col-lg-4 mb-4 d-flex align-items-stretch">
                                     <div class="card w-100">
                                         <!-- Foto Staff -->
-                                        <img src="{{ asset('storage/' . $staff->photo) }}" class="card-img-top"
+                                        <img src="{{ asset('storage/' . $staff->foto) }}" class="card-img-top"
                                             alt="{{ $staff->nama }}" style="height: 200px; object-fit: cover;">
 
                                         <div class="card-body d-flex flex-column">
