@@ -10,6 +10,7 @@
     <meta name="keywords"
         content="admin template, Cuba admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="pixelstrap">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="../images/logo_jabar.png" type="image/x-icon">
     <link rel="shortcut icon" href="../images/logo_jabar.png" type="image/x-icon">
     <title>@yield('title', 'SPTH - Admin')</title>
@@ -148,7 +149,26 @@
             }, 3000); // 3000 ms = 3 detik
         }
     </script>
+    {{--logout handle --}}
+    <script>
+        document.getElementById('logoutLink').addEventListener('click', function(event) {
+            event.preventDefault(); // Mencegah link agar tidak langsung berpindah halaman
 
+            fetch("{{ route('logout') }}", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
+                        "content"),
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({})
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = "/login"; // Redirect ke halaman login setelah logout
+                }
+            }).catch(error => console.error("Logout gagal:", error));
+        });
+    </script>
 
     <!-- latest jquery-->
     <script src="../assets/js/jquery.min.js"></script>
