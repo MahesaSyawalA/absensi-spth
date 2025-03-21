@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\KriteriaPenilaianController;
 use App\Http\Controllers\Admin\RekapPenilaianController;
 use App\Http\Controllers\Admin\UserController;
@@ -26,6 +27,9 @@ Route::get('/check-login', [AuthSessionController::class, 'checkLoginStatus']);
 
 // Route yang dilindungi auth
 Route::middleware(['auth', 'is_admin'])->group(function () {
+
+    Route::get('/admin/profile', [AdminProfileController::class, 'index']);
+
     Route::get('/admin/management-user', [UserController::class, 'index'])->name('management-user');
     Route::post('/users', [UserController::class, 'store'])->middleware('sanitize')->name('user.store');
     Route::get('/users/{nip}', [UserController::class, 'edit'])->name('users.edit');

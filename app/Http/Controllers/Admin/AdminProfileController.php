@@ -1,0 +1,18 @@
+<?php
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+
+class AdminProfileController extends Controller
+{
+    public function index(){
+        $user = Auth::user();
+        $data = [
+            'title' => 'Profile',
+            'user' => $user,
+        ];
+        return view('admin.profile',$data);
+    }
+
+}

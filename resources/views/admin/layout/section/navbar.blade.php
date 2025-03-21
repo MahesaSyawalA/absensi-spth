@@ -23,11 +23,20 @@
         <div class="nav-right col-xxl-7 col-xl-6 col-md-7 col-8 pull-right right-header p-0 ms-auto">
             <ul class="nav-menus">
                 <li class="profile-nav onhover-dropdown pe-0 py-0">
-                    <div class="d-flex profile-media"><img class="b-r-10" src="../assets/images/dashboard/profile.png"
-                            alt="">
-                        <div class="flex-grow-1"><span>Emay Walter</span>
-                            <p class="mb-0">Admin <i class="middle fa-solid fa-angle-down"></i></p>
-                        </div>
+                    <div class="d-flex profile-media">
+                        @if ($userData)
+                            <img class="b-r-10" src="{{ $userData['foto'] }}" alt="">
+                            <div class="flex-grow-1"><span>{{ $userData['nama'] }}</span>
+                                <p class="mb-0">{{ $userData['role'] }} <i class="middle fa-solid fa-angle-down"></i>
+                                </p>
+                            </div>
+                        @else
+                            <img class="b-r-10" src="../assets/images/dashboard/profile.png" alt="">
+                            <div class="flex-grow-1"><span>Nama</span>
+                                <p class="mb-0">Role<i class="middle fa-solid fa-angle-down"></i>
+                                </p>
+                            </div>
+                        @endif
                     </div>
                     <ul class="profile-dropdown onhover-show-div">
                         <li><a href="../template/sign-up.html"><i data-feather="user"></i><span>Account
@@ -53,5 +62,3 @@
         <script class="empty-template" type="text/x-handlebars-template"><div class="EmptyMessage">Your search turned up 0 results. This most likely means the backend is down, yikes!</div></script>
     </div>
 </div>
-
-
