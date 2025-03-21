@@ -14,4 +14,8 @@ class Kriteria extends Model
     protected $primaryKey = 'uuid';
     protected $fillable = ['name', 'bobot', 'type'];
 
+    public function subKriteria()
+    {
+        return $this->hasMany(SubKriteria::class, 'id_kriteria', 'uuid');
+    }
 }
