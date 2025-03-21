@@ -30,6 +30,7 @@
                                 <use href="../assets/svg/icon-sprite.svg#stroke-user"></use>
                             </svg><span>Profile</span></a>
                     </li>
+                    @if($userData['role'] == 'superadmin')
                     <li class="sidebar-list"><i class="fa-solid fa-thumbtack"></i><a
                             class="sidebar-link sidebar-title link-nav" href="/admin/management-user">
                             <svg class="stroke-icon">
@@ -39,6 +40,7 @@
                                 <use href="../assets/svg/icon-sprite.svg#stroke-authenticate"></use>
                             </svg><span>Management User</span></a>
                     </li>
+                    @endif
                     <li class="sidebar-list"><i class="fa-solid fa-thumbtack"></i><a
                             class="sidebar-link sidebar-title link-nav" href="/admin/rekap-penilaian">
                             <svg class="stroke-icon">

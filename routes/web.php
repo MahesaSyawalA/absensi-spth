@@ -12,7 +12,7 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\SanitizeInput;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/penilaian-staff', [HomeController::class, 'indexPenilaian']);
 
 Route::get('/login', [AuthSessionController::class, 'index'])->name('login');
@@ -28,14 +28,13 @@ Route::get('/check-login', [AuthSessionController::class, 'checkLoginStatus']);
 // Route yang dilindungi auth
 Route::middleware(['auth', 'is_admin'])->group(function () {
 
-    Route::get('/admin/profile', [AdminProfileController::class, 'index']);
+    Route::get('/admin/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 
     Route::get('/admin/management-user', [UserController::class, 'index'])->name('management-user');
     Route::post('/users', [UserController::class, 'store'])->middleware('sanitize')->name('user.store');
     Route::get('/users/{nip}', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{nip}', [UserController::class, 'update'])->middleware('sanitize')->name('users.update');
     Route::delete('/users/{nip}', [UserController::class, 'destroy'])->name('users.destroy');
-    // Route::get('/admin', [AdminController::class,'index']);
 
 
     Route::post('/kriteria', [KriteriaPenilaianController::class, 'store'])->middleware('sanitize')->name('kriteria.store');

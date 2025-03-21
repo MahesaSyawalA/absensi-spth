@@ -59,9 +59,10 @@ class AuthSessionController extends Controller
                 $request->session()->regenerate();
 
                 $redirectRoute = match ($user->role) {
-                    'admin' => route('management-user'),
+                    'superadmin' => route('management-user'),
+                    'admin' => route('admin.profile'),
                     'pegawai' => route('staff.index'),
-                    default => route('/'),
+                    default => route('home'),
                 };
 
                 return response()->json([

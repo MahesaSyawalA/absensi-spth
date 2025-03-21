@@ -36,6 +36,19 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('userData', $data);
         });
+        
+        View::composer('admin.layout.section.sidebar', function ($view) {
+            if (Auth::check()) {
+                $user = Auth::user();
+                $data = [
+                    'role' => $user->role, // Ambil hanya role dan name
+                ];
+            } else {
+                $data = null; // Jika belum login, kirim null
+            }
+
+            $view->with('userData', $data);
+        });
         View::composer('client.layout.section.navbar', function ($view) {
             if (Auth::check()) {
                 $user = Auth::user();
