@@ -10,6 +10,7 @@
     <meta name="keywords"
         content="admin template, Cuba admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="pixelstrap">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="../images/logo_jabar.png" type="image/x-icon">
     <link rel="shortcut icon" href="../images/logo_jabar.png" type="image/x-icon">
     <title>@yield('title','SPTH - Admin')</title>
@@ -120,7 +121,7 @@
             }).catch(error => console.error("Logout gagal:", error));
         });
     </script>
-    
+
     <!-- latest jquery-->
     <script src="../assets/js/jquery.min.js"></script>
     <!-- Bootstrap js-->
