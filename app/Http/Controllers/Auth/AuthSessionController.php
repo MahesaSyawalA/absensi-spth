@@ -58,9 +58,15 @@ class AuthSessionController extends Controller
                 Auth::login($user);
                 $request->session()->regenerate();
 
+                $redirectRoute = match ($user->role) {
+                    'admin' => route('management-user'),
+                    'pegawai' => route('staff.index'),
+                    default => route('/'),
+                };
+
                 return response()->json([
                     'message' => 'Login berhasil',
-                    'redirect' => route('management-user'), // <-- Tambahkan redirect di sini
+                    'redirect' => $redirectRoute,
                 ], 200);
             }
         }

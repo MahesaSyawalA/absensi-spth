@@ -44,7 +44,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'is_pegawai'])->group(function () {
-    Route::get('/staff/absensi', [AbsensiController::class, 'index']);
+    Route::get('/staff/absensi', [AbsensiController::class, 'index'])->name('staff.index');
     Route::get('/staff/absen-scan', [AbsensiController::class, 'absen']);
     Route::get('/staff/profile', [ProfileController::class, 'index']);
 });
