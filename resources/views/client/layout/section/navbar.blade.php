@@ -25,7 +25,7 @@
                 <li class="profile-nav onhover-dropdown pe-0 py-0">
                     <div class="d-flex profile-media">
                         @if ($userData)
-                            <img class="b-r-10" src="{{ $userData['foto'] }}" alt="">
+                            <img class="b-r-10" src="{{ asset('storage/'.$userData['foto']) }}" alt="" style="max-height:40px; max-width:40px;">
                             <div class="flex-grow-1"><span>{{ $userData['nama'] }}</span>
                                 <p class="mb-0">{{ $userData['role'] }} <i class="middle fa-solid fa-angle-down"></i>
                                 </p>

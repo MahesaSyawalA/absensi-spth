@@ -16,7 +16,7 @@
                     <div class="avatar">
                         <div class="common-align">
                             <div>
-                                <img id="output" src="{{$user->foto}}" alt="Profile Image" style="min-height: 80px;">
+                                <img id="output" src="{{asset('storage/'.$user->foto)}}" alt="Profile Image" style="min-height: 80px;">
                                 {{-- <input type="file" accept="image/*" onchange="loadFile(event)">
                                 <div class="icon-wrapper" id="cancelButton"><i class="icofont icofont-error"></i></div>
                                 <div class="icon-wrapper"><i class="icofont icofont-pencil-alt-5"></i></div> --}}
