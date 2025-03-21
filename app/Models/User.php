@@ -29,6 +29,8 @@ class User extends Authenticatable
         'status_pegawai',
         'foto',
         'role',
+        'username',
+        'password',
     ];
 
     /**
