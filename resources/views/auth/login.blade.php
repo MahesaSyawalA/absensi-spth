@@ -60,11 +60,14 @@
                                     <input name="username" class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-form-label">Password</label>
-                                    <div class="form-input position-relative">
-                                        <input class="form-control" type="password" name="password"
-                                            required="" placeholder="*********">
-                                        {{-- <div class="show-hide"><span class="show"> </span></div> --}}
+                                    <label class="form-label" for="validatepwd">Password</label>
+                                    <div class="input-group">
+                                        <input class="form-control" id="validatepwd" type="password" placeholder="Enter your password" name="password" required>
+                                    </div>
+
+                                    <div class="form-check form-switch mt-2">
+                                        <input class="form-check-input" type="checkbox" id="showPasswordCheck">
+                                        <label class="form-check-label" for="showPasswordCheck">Show Password</label>
                                     </div>
                                 </div>
                                 <div class="form-group mb-0">
@@ -79,37 +82,43 @@
                 </div>
             </div>
         </div>
+        <script>
+            document.getElementById('showPasswordCheck').addEventListener('change', function () {
+                const passwordField = document.getElementById('validatepwd');
+                passwordField.type = this.checked ? 'text' : 'password';
+            });
+        </script>
 
         <script>
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            document.getElementById('loginForm').addEventListener('submit', function (event) {
+            document.getElementById('loginForm').addEventListener('submit', function(event) {
                 event.preventDefault();
 
                 const form = event.target;
                 const formData = new FormData(form);
 
                 fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken, // Menambahkan CSRF token
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message === 'Login berhasil') {
-                        window.location.href = data.redirect;
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan saat memproses login.');
-                });
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken, // Menambahkan CSRF token
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'Login berhasil') {
+                            window.location.href = data.redirect;
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan saat memproses login.');
+                    });
             });
         </script>
 
