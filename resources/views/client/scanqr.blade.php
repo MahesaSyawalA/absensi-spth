@@ -11,7 +11,7 @@
     <div id="result" class="f-20 text-center mx-5"></div>
     <div id="absen_ke" class="f-16 text-center mx-5"></div>
     <div id="latlon" class="f-15 m-t-5 text-center"></div>
-    <div id="time" class="f-18 m-t-5 text-center"></div>
+    <div id="time" class="f-24 m-t-5 text-center"></div>
     <div id="datetime" class="f-15 m-t-5 text-center"></div>
     <div id="distance" class="f-15 m-t-5 text-center"></div>
 
@@ -96,7 +96,7 @@
                                     }
 
                                     if (data.time) {
-                                        document.getElementById("time").innerText = data.time;
+                                        document.getElementById("time").innerText = `${data.time} WIB`;
                                     }
 
                                     if (data.datetime) {
