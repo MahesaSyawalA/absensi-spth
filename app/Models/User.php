@@ -23,6 +23,7 @@ class User extends Authenticatable
     protected $fillable = [
         'nip',
         'nama',
+        'slug',
         'jabatan',
         'barcode',
         'jabatan',
@@ -78,6 +79,18 @@ class User extends Authenticatable
 
         static::creating(function ($user) {
             $user->id = Str::uuid(); // Menggunakan UUID
+            $user->slug = User::generateSlug($user->nama, $user->nip);
         });
+
     }
- }
+
+    public static function generateSlug($name, $nip)
+    {
+        $nip_last3 = substr($nip, -3); // Ambil 3 angka terakhir dari NIP
+        $slug = Str::slug($name) . '-' . $nip_last3;
+
+        // Pastikan slug unik
+        $count = User::where('slug', 'LIKE', "$slug%")->count();
+        return $count ? "{$slug}-{$count}" : $slug;
+    }
+}
