@@ -38,6 +38,7 @@
                     <table class="display table-striped border" id="basic-1">
                         <thead>
                             <tr>
+                                <th>Username</th>
                                 <th>NIP</th>
                                 <th>Nama</th>
                                 <th>Jabatan</th>
@@ -52,7 +53,8 @@
                         </thead>
                         <tbody>
                             @foreach ($users as $u)
-                                <tr>
+                            <tr>
+                                    <td>{{ $u->username }}</td>
                                     <td>{{ $u->nip }}</td>
                                     <td>{{ $u->nama }}</td>
                                     <td>{{ $u->jabatan }}</td>
@@ -98,6 +100,14 @@
                         <form id="addUserForm" action="{{ route('user.store') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf <!-- Tambahkan CSRF token -->
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="text" class="form-control" id="password" name="password" required>
+                            </div>
                             <div class="form-group">
                                 <label for="nip">NIP</label>
                                 <input type="text" class="form-control" id="nip" name="nip" required>
@@ -162,42 +172,50 @@
                 </div>
                 <div class="modal-body">
                     <form id="editUserForm">
-                        <div class="form-group">
+                        <div class="form-group mb-2">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="editUsername" name="username" required>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="password" class="d-flex justify-content-between">Password <span>Isi jika ingin mengubah</span></label>
+                            <input type="text" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="form-group mb-2">
                             <label for="editNip">NIP</label>
                             <input type="text" class="form-control" id="editNip" name="nip" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-2">
                             <label for="editNama">Nama</label>
                             <input type="text" class="form-control" id="editNama" name="nama" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-2">
                             <label for="editJabatan">Jabatan</label>
                             <input type="text" class="form-control" id="editJabatan" name="jabatan" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-2">
                             <label for="editTanggalLahir">Tanggal Lahir</label>
                             <input type="date" class="form-control" id="editTanggalLahir" name="tanggal_lahir"
                                 required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-2">
                             <label for="editStatus">Status</label>
                             <select class="form-control" id="editStatus" name="status_pegawai" required>
                                 <option value="ASN">ASN</option>
                                 <option value="Non ASN">Non ASN</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-2">
                             <label for="editJenisKelamin">Jenis Kelamin</label>
                             <select class="form-control" id="editJenisKelamin" name="jenis_kelamin" required>
                                 <option value="Laki laki">Laki laki</option>
                                 <option value="Perempuan">Perempuan</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="editFoto">Foto</label>
+                        <div class="form-group mb-2">
+                            <label for="editFoto" class="d-flex justify-content-between">Foto <span>isi jika ingin mengubah</span></label>
                             <input type="file" class="form-control" id="editFoto" name="foto">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-2">
                             <label for="editRole">Role</label>
                             <select class="form-control" id="editRole" name="role" required>
                                 <option value="superadmin">Super Admin</option>
@@ -235,7 +253,7 @@
         </div>
     </div>
 
-    <!-- Alert Success -->
+    {{-- <!-- Alert Success -->
     <div id="successAlert" class="alert alert-success d-flex align-items-center d-none" role="alert"
         style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
         <div>
@@ -251,7 +269,7 @@
             <i class="stroke-danger" data-feather="alert-circle"></i>
         </div>
         <span class="txt-light" id="dangerMessage">Gagal menghapus user!</span>
-    </div>
+    </div> --}}
 
     {{-- scripts --}}
     <script>
@@ -342,6 +360,7 @@
                     .then(data => {
                         console.log(data);
                         // Isi form dengan data user
+                        document.getElementById('editUsername').value = data.user.username;
                         document.getElementById('editNip').value = data.user.nip;
                         document.getElementById('editNama').value = data.user.nama;
                         document.getElementById('editJabatan').value = data.user.jabatan;

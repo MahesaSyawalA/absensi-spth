@@ -5,11 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Cuba admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
-    <meta name="keywords"
-        content="admin template, Cuba admin template, dashboard template, flat admin template, responsive admin template, web app">
-    <meta name="author" content="pixelstrap">
+    
     <link rel="icon" href="../images/logo_jabar.png" type="image/x-icon">
     <link rel="shortcut icon" href="../images/logo_jabar.png" type="image/x-icon">
     <title>SPTH - Home</title>
@@ -160,7 +156,7 @@
                                 <div class="col-md-6 col-lg-4 mb-4 d-flex align-items-stretch">
                                     <div class="card w-100">
                                         <!-- Foto Staff -->
-                                        <img src="{{ asset('storage/' . $staff->photo) }}" class="card-img-top"
+                                        <img src="{{ asset('storage/' . $staff->foto) }}" class="card-img-top"
                                             alt="{{ $staff->nama }}" style="height: 200px; object-fit: cover;">
 
                                         <div class="card-body d-flex flex-column">

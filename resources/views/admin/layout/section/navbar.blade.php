@@ -22,31 +22,31 @@
         </div>
         <div class="nav-right col-xxl-7 col-xl-6 col-md-7 col-8 pull-right right-header p-0 ms-auto">
             <ul class="nav-menus">
-
-                <li class="fullscreen-body"> <span>
-                        <svg id="maximize-screen">
-                            <use href="../assets/svg/icon-sprite.svg#full-screen"></use>
-                        </svg></span></li>
-
-                <li>
-                    <div class="mode">
-                        <svg>
-                            <use href="../assets/svg/icon-sprite.svg#moon"></use>
-                        </svg>
-                    </div>
-                </li>
                 <li class="profile-nav onhover-dropdown pe-0 py-0">
-                    <div class="d-flex profile-media"><img class="b-r-10" src="../assets/images/dashboard/profile.png"
-                            alt="">
-                        <div class="flex-grow-1"><span>Emay Walter</span>
-                            <p class="mb-0">Admin <i class="middle fa-solid fa-angle-down"></i></p>
-                        </div>
+                    <div class="d-flex profile-media">
+                        @if ($userData)
+                        <img class="b-r-10" src="{{ asset('storage/'.$userData['foto']) }}" alt="" style="max-height:40px; max-width:40px;">
+                            <div class="flex-grow-1"><span>{{ $userData['nama'] }}</span>
+                                <p class="mb-0">{{ $userData['role'] }} <i class="middle fa-solid fa-angle-down"></i>
+                                </p>
+                            </div>
+                        @else
+                            <img class="b-r-10" src="../assets/images/dashboard/profile.png" alt="">
+                            <div class="flex-grow-1"><span>Nama</span>
+                                <p class="mb-0">Role<i class="middle fa-solid fa-angle-down"></i>
+                                </p>
+                            </div>
+                        @endif
                     </div>
                     <ul class="profile-dropdown onhover-show-div">
                         <li><a href="../template/sign-up.html"><i data-feather="user"></i><span>Account
                                 </span></a></li>
-                        <li><a href="../template/login.html"><i data-feather="log-in"> </i><span>Log
-                                    out</span></a></li>
+                        <li>
+                            <a href="#" id="logoutLink">
+                                <i data-feather="log-out"></i><span>Logout</span>
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
             </ul>

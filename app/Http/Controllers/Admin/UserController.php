@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -32,16 +31,42 @@ class UserController extends Controller
             'jenis_kelamin' => 'required|string|in:Laki laki,Perempuan',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'role' => 'required|string|in:superadmin,admin,pegawai',
+
+            'username' => 'required|string|unique:users,username|regex:/^[a-zA-Z0-9]+$/|min:4',
+
+            'password' => [
+                'required',
+                'string',
+                'min:8', // Minimal 8 karakter
+                'regex:/[a-z]/', // Harus ada huruf kecil
+                'regex:/[A-Z]/', // Harus ada huruf besar
+                'regex:/[0-9]/', // Harus ada angka
+                'regex:/[\W]/', // Harus ada simbol (karakter khusus)
+            ],
+        ], [
+            // Pesan error dalam Bahasa Indonesia
+            'password.required' => 'Kata sandi wajib diisi.',
+            'password.string' => 'Kata sandi harus berupa teks.',
+            'password.min' => 'Kata sandi minimal harus memiliki 8 karakter.',
+            'password.regex' => 'Kata sandi harus mengandung huruf besar, huruf kecil, angka, dan simbol.',
+
+            'username.required' => 'Username wajib diisi.',
+            'username.string' => 'Username harus berupa teks.',
+            'username.unique' => 'Username sudah digunakan, silakan pilih yang lain.',
+            'username.regex' => 'Username hanya boleh mengandung huruf dan angka.',
+            'username.min' => 'Username minimal harus memiliki 4 karakter.',
         ]);
+
 
         // Simpan foto jika ada
         $fotoPath = null;
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('uploads/profile_pictures', 'public');
         }
-
         // Simpan data ke database
         $user = User::create([
+            'username' => $request->username,
+            'password' => bcrypt($request->password),
             'nip' => $request->nip,
             'nama' => $request->nama,
             'jabatan' => $request->jabatan,
@@ -89,6 +114,29 @@ class UserController extends Controller
             'jenis_kelamin' => 'required|string|in:Laki laki,Perempuan',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'role' => 'required|string|in:superadmin,admin,pegawai',
+            'username' => 'required|string|unique:users,username|regex:/^[a-zA-Z0-9]+$/|min:4',
+
+            'password' => [
+                'required',
+                'string',
+                'min:8', // Minimal 8 karakter
+                'regex:/[a-z]/', // Harus ada huruf kecil
+                'regex:/[A-Z]/', // Harus ada huruf besar
+                'regex:/[0-9]/', // Harus ada angka
+                'regex:/[\W]/', // Harus ada simbol (karakter khusus)
+            ],
+        ], [
+            // Pesan error dalam Bahasa Indonesia
+            'password.required' => 'Kata sandi wajib diisi.',
+            'password.string' => 'Kata sandi harus berupa teks.',
+            'password.min' => 'Kata sandi minimal harus memiliki 8 karakter.',
+            'password.regex' => 'Kata sandi harus mengandung huruf besar, huruf kecil, angka, dan simbol.',
+
+            'username.required' => 'Username wajib diisi.',
+            'username.string' => 'Username harus berupa teks.',
+            'username.unique' => 'Username sudah digunakan, silakan pilih yang lain.',
+            'username.regex' => 'Username hanya boleh mengandung huruf dan angka.',
+            'username.min' => 'Username minimal harus memiliki 4 karakter.',
         ]);
 
         // Cari user berdasarkan NIP
@@ -115,6 +163,8 @@ class UserController extends Controller
 
         // Update data user
         $user->update([
+            'username' => $request->username,
+            'password' => bcrypt($request->password),
             'nama' => $request->nama,
             'jabatan' => $request->jabatan,
             'tanggal_lahir' => $request->tanggal_lahir,
