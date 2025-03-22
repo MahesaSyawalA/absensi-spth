@@ -112,7 +112,7 @@
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('Terjadi kesalahan saat memproses login.');
+                        alert(`Terjadi kesalahan saat memproses login. ${error}`);
                     });
             });
         </script>

@@ -10,10 +10,10 @@ class Absensi extends Model
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $fillable = [
-        'id',
         'user_id',
         'latitude',
         'longitude',
+        'absen_ke',
         'scanned_at',
     ];
 }
