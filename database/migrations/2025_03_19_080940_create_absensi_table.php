@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
+            $table->integer('absen_ke');
+            $table->string('keterangan');
             $table->timestamp('scanned_at');
             $table->timestamps();
         });
