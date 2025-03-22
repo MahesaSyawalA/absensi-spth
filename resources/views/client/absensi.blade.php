@@ -60,12 +60,12 @@
                             <div id="clock" class="display-4">14:07:46</div>
 
                             <!-- Tulisan Selamat Datang -->
-                            <h5 class="card-title">Status Absensi Hari Ini</h5>
+                            <h5 class="card-title m-t-20">Status Absensi Hari Ini</h5>
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
-                                <span class="badge badge-success">Absensi Ke 1</span>
-                                <span class="badge badge-success">Absensi Ke 2</span>
-                                <span class="badge badge-warning">Absensi Ke 3</span>
-                                <span class="badge badge-dark">Absensi Ke 4</span>
+                                <span class="badge {{ ($absensi_1 == true) ? 'badge-success' : 'badge-dark' }}">Absensi Ke-1</span>
+                                <span class="badge {{ ($absensi_2 == true) ? 'badge-success' : 'badge-dark' }}">Absensi Ke-2</span>
+                                <span class="badge {{ ($absensi_3 == true) ? 'badge-success' : 'badge-dark' }}">Absensi Ke-3</span>
+                                <span class="badge {{ ($absensi_4 == true) ? 'badge-success' : 'badge-dark' }}">Absensi Ke-4</span>
                             </div>
                         </div>
                     </div>
@@ -100,13 +100,20 @@
                                         foreach ($records as $r) {
                                             $attendance[$r->absen_ke - 1] = '✔';
                                             $discipline[$r->absen_ke - 1] = "($r->keterangan)";
-                                            $time_of_attendance[$r->absen_ke - 1] = date('h:i:s', strtotime($r->scanned_at));
+                                            $time_of_attendance[$r->absen_ke - 1] = date(
+                                                'h:i:s',
+                                                strtotime($r->scanned_at),
+                                            );
                                         }
                                     @endphp
-                                    <td>{{ $attendance[0] ?? '-' }} {{ $time_of_attendance[0] ?? '-' }} {{ $discipline[0] ?? '-' }}</td>
-                                    <td>{{ $attendance[1] ?? '-' }} {{ $time_of_attendance[1] ?? '-' }} {{ $discipline[1] ?? '-' }}</td>
-                                    <td>{{ $attendance[2] ?? '-' }} {{ $time_of_attendance[2] ?? '-' }} {{ $discipline[2] ?? '-' }}</td>
-                                    <td>{{ $attendance[3] ?? '-' }} {{ $time_of_attendance[3] ?? '-' }} {{ $discipline[3] ?? '-' }}</td>
+                                    <td>{{ $attendance[0] ?? '-' }} {{ $time_of_attendance[0] ?? '-' }}
+                                        {{ $discipline[0] ?? '-' }}</td>
+                                    <td>{{ $attendance[1] ?? '-' }} {{ $time_of_attendance[1] ?? '-' }}
+                                        {{ $discipline[1] ?? '-' }}</td>
+                                    <td>{{ $attendance[2] ?? '-' }} {{ $time_of_attendance[2] ?? '-' }}
+                                        {{ $discipline[2] ?? '-' }}</td>
+                                    <td>{{ $attendance[3] ?? '-' }} {{ $time_of_attendance[3] ?? '-' }}
+                                        {{ $discipline[3] ?? '-' }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
