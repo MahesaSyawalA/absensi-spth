@@ -163,7 +163,7 @@
                     <div class="card py-3">
                         <div class="container-fluid">
                             <h3>Data Diri</h3>
-                            <form class="row row-cols-2 row-gap-2" method="POST"
+                            <form class="row row-cols-1 row-cols-md-2 row-gap-2" method="POST"
                                 action="{{ route('store.penilaian') }}">
                                 @csrf
                                 <input type="hidden" name="slug" id="slugInput" value="{{$slug}}">
@@ -192,7 +192,7 @@
                                         <!-- Label Kriteria -->
                                         <label class="">{{ Str::headline($k->name) }}</label>
 
-                                        <div class="mb-3 d-flex gap-3 checkbox-checked">
+                                        <div class="mb-3 d-flex flex-wrap gap-3">
                                             @foreach ($k->subKriteria as $index => $sub)
                                                 <div class="form-check">
                                                     <input class="form-check-input" id="radio{{ $sub->uuid }}"
@@ -208,7 +208,7 @@
                                 @endforeach
 
 
-                                <div class="col-12 d-flex justify-content-end mt-3">
+                                <div  class="col-md-12 d-flex justify-content-end mt-auto">
                                     <button type='submit' class="btn btn-pill btn-outline-success">Submit</button>
                                 </div>
                             </form>
