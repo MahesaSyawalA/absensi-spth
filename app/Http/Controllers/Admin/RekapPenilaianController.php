@@ -10,7 +10,7 @@ class RekapPenilaianController extends Controller
 
     public function index()
     {
-        $topEmployees = DB::table('Absensi as a')
+        $topEmployees = DB::table('absensi as a')
         ->join('users as u', 'a.user_id', '=', 'u.id')
         ->select('u.nama', DB::raw('COUNT(a.id) as total_scans'))
         ->groupBy('u.nama')

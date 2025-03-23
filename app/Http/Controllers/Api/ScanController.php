@@ -25,8 +25,8 @@ class ScanController extends Controller
         $userLatitude = $request->latitude;
         $userLongitude = $request->longitude;
 
-        $officeLatitude = -6.887851;
-        $officeLongitude = 107.564273;
+        $officeLatitude = -6.92972;
+        $officeLongitude = 107.76972;
 
         $distance = $this->calculateDistance($officeLatitude, $officeLongitude, $userLatitude, $userLongitude);
         $radius = 5; // radius 5 meter
