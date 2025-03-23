@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <link rel="icon" href="../images/logo_jabar.png" type="image/x-icon">
     <link rel="shortcut icon" href="../images/logo_jabar.png" type="image/x-icon">
     <title>SPTH - Home</title>
@@ -44,9 +44,11 @@
         .max-w-md-113 {
             max-width: 113px;
         }
+
         .max-w-sm-113 {
             max-width: 250px;
         }
+
         .max-w-sm-75 {
             max-width: 75px;
         }
@@ -60,9 +62,10 @@
             .max-w-lg-150 {
                 max-width: 100px;
             }
+
             .max-w-sm-113 {
-            max-width: 350px;
-        }
+                max-width: 350px;
+            }
         }
     </style>
 
@@ -89,8 +92,7 @@
     <div class="page-wrapper horizontal-wrapper" id="pageWrapper">
         <!-- Page Header Start-->
 
-        <div class=" shadow-sm d-flex align-items-center justify-content-between p-3 px-2 px-md-4"
-            style="width:100%; ">
+        <div class=" shadow-sm d-flex align-items-center justify-content-between p-3 px-2 px-md-4" style="width:100%; ">
             <div class="logo-wrapper">
                 <a href="/" class="d-none d-md-block">
                     <img class="img-fluid for-light" src="/images/SPTH.png" alt="" style="width: 10vw;">
@@ -98,8 +100,8 @@
                 </a>
             </div>
             <ul class="d-flex ">
-                <li class=" px-3 py-2 rounded">
-                    <a href="/penilaian-staff" style="">Berikan Penilaian</a>
+                <li class="px-3 py-2 rounded">
+                    <a href="#formPenilaian" id="scrollToForm">Berikan Penilaian</a>
                 </li>
                 <li class="bg-primary px-3 py-2 rounded">
                     <a href="/login" style="color: white; ">Login</a>
@@ -117,7 +119,8 @@
                     <div class="card pb-4  py-md-5 d-flex flex-column align-items-center justify-content-center"
                         style="background-image: url('/images/bg.webp'); background-repeat: no-repeat; background-position: top;">
                         <div class="grid align-items-center py-4 gap-4">
-                            <img src="/images/logo_jabar.png" class="img-fluid max-w-lg-150 max-w-md-113 max-w-sm-75 " alt="Logo Jabar">
+                            <img src="/images/logo_jabar.png" class="img-fluid max-w-lg-150 max-w-md-113 max-w-sm-75 "
+                                alt="Logo Jabar">
                             <img src="/images/SPTH.png" class="img-fluid max-w-md-150 max-w-sm-113" alt="SPTH">
                         </div>
                         <h1 class="text-center">Selamat Datang Di Website SIDIK SPTH </h1>
@@ -147,7 +150,7 @@
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card" id="listStaff">
                     <div class="container mt-5">
                         <h1 class="text-center mb-4">Daftar Staff</h1>
 
@@ -172,6 +175,11 @@
                                             <p class="card-text">
                                                 <strong>Email:</strong> {{ $staff->email }}
                                             </p>
+                                            <div class="container d-flex justify-content-end">
+
+                                                <a href="{{ route('index.penilaian', ['slug' => $staff->slug]) }}"
+                                                    class="btn btn-primary mt-auto">Berikan Penilaian</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -201,6 +209,22 @@
             </footer>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("scrollToForm").addEventListener("click", function(event) {
+                event.preventDefault(); // Mencegah perubahan halaman
+
+                const target = document.getElementById("listStaff");
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: "smooth", // Scroll halus
+                        block: "start" // Fokus ke bagian atas elemen
+                    });
+                }
+            });
+        });
+    </script>
 
     <!-- latest jquery-->
     <script src="../assets/js/jquery.min.js"></script>

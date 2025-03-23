@@ -23,6 +23,7 @@
     <link rel="stylesheet" type="text/css" href="../assets/css/vendors/flag-icon.css">
     <!-- Feather icon-->
     <link rel="stylesheet" type="text/css" href="../assets/css/vendors/feather-icon.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Plugins css start-->
     @section('linkPlugins')
         <link rel="stylesheet" type="text/css" href="../assets/css/vendors/slick.css">
@@ -119,7 +120,8 @@
                         <div class="container">
                             <div class="row align-items-center">
                                 <div class="col-md-4 text-center"> <!-- Gambar diperlebar -->
-                                    <img class="img-fluid" src="/images/example.png" alt="Foto Staff">
+                                    <img class="img-fluid" src="{{ asset('storage/' . $selectedUser->foto) }}"
+                                        alt="Foto Staff">
                                 </div>
 
                                 <div class="col-md-8"> <!-- Form diperlebar -->
@@ -127,31 +129,30 @@
                                         <div class="col-md-6">
                                             <label for="nama" class="form-label">Nama</label>
                                             <input type="text" class="form-control" id="nama"
-                                                value="Diki Fauzi Ramadani" disabled>
+                                                value="{{ $selectedUser->nama }}" disabled>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="nik" class="form-label">NIP/No</label>
                                             <input type="text" class="form-control" id="nik"
-                                                value="1234567890123456" disabled>
+                                                value="{{ $selectedUser->nip }}" disabled>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="jabatan" class="form-label">Jabatan</label>
-                                            <input type="text" class="form-control" id="jabatan"
-                                                value="Kebersihan" disabled>
+                                            <textarea class="form-control" id="jabatan" disabled>{{ $selectedUser->jabatan }}</textarea>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="status pegawai" class="form-label">Status Pegawai</label>
                                             <input type="text" class="form-control" id="status pegawai"
-                                                value="Non Asn" disabled>
+                                                value="{{ $selectedUser->status_pegawai }}" disabled>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
                                             <input type="jenis_kelamin" class="form-control" id="jenis_kelamin"
-                                                value="johndoe@example.com" disabled>
+                                                value="{{ $selectedUser->jenis_kelamin }}" disabled>
                                         </div>
 
                                     </div>
@@ -159,42 +160,45 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="card pb-3">
+                    <div class="card py-3">
                         <div class="container-fluid">
                             <h3>Data Diri</h3>
-                            <form class="row row-cols-2 row-gap-2">
+                            <form class="row row-cols-2 row-gap-2" method="POST"
+                                action="{{ route('store.penilaian') }}">
+                                @csrf
+                                <input type="hidden" name="slug" id="slugInput" value="{{$slug}}">
                                 <div class="col">
                                     <label class="form-label" for="validationTooltipName">Nama</label>
                                     <input class="form-control required" id="validationTooltipName" type="text"
-                                        placeholder="Masukan nama anda" required="">
+                                        placeholder="Masukan nama anda" name="nama" required="">
                                 </div>
                                 <div class="col">
                                     <label class="form-label" for="validationTooltipGmail">Gmail</label>
                                     <input class="form-control required email" id="validationTooltipGmail"
-                                        type="email" placeholder="contoh@gmail.com" required="">
+                                        type="email" placeholder="contoh@gmail.com" name="email" required="">
                                 </div>
                                 <div class="col">
                                     <label class="form-label" for="validationTooltipName">Tujuan</label>
                                     <input class="form-control required" id="validationTooltipName" type="text"
-                                        placeholder="Masukan Tujuan" required="">
+                                        placeholder="Masukan Tujuan" name="tujuan" required="">
                                 </div>
                                 <div class="col">
-                                    <label class="form-label" for="validationTooltipName">Tujuan</label>
+                                    <label class="form-label" for="validationTooltipName">Pelayanannya</label>
                                     <input class="form-control required" id="validationTooltipName" type="text"
-                                        placeholder="Masukan Pelayanannya" required="">
+                                        placeholder="Masukan Pelayanannya" name="pelayanan" required="">
                                 </div>
                                 @foreach ($kriteriaWithSub as $k)
                                     <div class="col">
                                         <!-- Label Kriteria -->
-                                        <label class="">{{ $k->name }}</label>
+                                        <label class="">{{ Str::headline($k->name) }}</label>
 
                                         <div class="mb-3 d-flex gap-3 checkbox-checked">
                                             @foreach ($k->subKriteria as $index => $sub)
                                                 <div class="form-check">
                                                     <input class="form-check-input" id="radio{{ $sub->uuid }}"
                                                         type="radio" name="subKriteria[{{ $k->uuid }}]"
-                                                        value="{{ $sub->nilai }}" {{ $index == 0 ? 'checked' : '' }}>
+                                                        value="{{ $sub->nilai }}"
+                                                        {{ $index == 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label mb-0"
                                                         for="radio{{ $sub->uuid }}">{{ $sub->name }}</label>
                                                 </div>
@@ -231,7 +235,106 @@
             </div>
         </footer>
     </div>
+    <!-- Alert Success -->
+    <div id="successAlert" class="alert alert-success d-flex align-items-center d-none" role="alert"
+        style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+        <div>
+            <i class="stroke-success" data-feather="check-square"></i>
+        </div>
+        <span class="txt-light" id="successMessage">User berhasil dihapus!</span>
     </div>
+
+    <!-- Alert Danger -->
+    <div id="dangerAlert" class="alert alert-danger d-flex align-items-center d-none" role="alert"
+        style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+        <div>
+            <i class="stroke-danger" data-feather="alert-circle"></i>
+        </div>
+        <span class="txt-light" id="dangerMessage">Gagal menghapus user!</span>
+    </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.querySelector("form");
+            const submitButton = form.querySelector("button[type='submit']");
+
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // Mencegah refresh halaman
+
+                const formData = new FormData(form);
+                const url = form.getAttribute("action");
+
+                // Menampilkan efek loading
+                submitButton.innerHTML = "Mengirim...";
+                submitButton.disabled = true;
+
+                fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json().then(data => ({
+                        status: response.status,
+                        body: data
+                    }))) // Tangani response JSON
+                    .then(result => {
+                        if (result.status === 201) {
+                            showSuccessAlert(result.body.message);
+                            setTimeout(() => {
+                                window.location.href = "/"; // Redirect ke home setelah 3 detik
+                            }, 3000);
+                        } else {
+                            showDangerAlert(result.body.message ||
+                                "Terjadi kesalahan saat menyimpan data.");
+                        }
+                    })
+                    .catch(error => {
+                        showDangerAlert("Gagal mengirim data!");
+                        console.error(error);
+                    })
+                    .finally(() => {
+                        // Mengembalikan tombol submit ke kondisi semula
+                        submitButton.innerHTML = "Submit";
+                        submitButton.disabled = false;
+                    });
+            });
+        });
+    </script>
+
+    <script>
+        function showSuccessAlert(message) {
+            // Set pesan ke dalam alert
+            document.getElementById('successMessage').innerText = message;
+
+            // Tampilkan alert
+            var alertElement = document.getElementById('successAlert');
+            alertElement.classList.remove('d-none'); // Hilangkan class d-none
+
+            // Sembunyikan alert setelah 3 detik
+            setTimeout(function() {
+                alertElement.classList.add('d-none');
+            }, 3000); // 3000 ms = 3 detik
+        }
+
+        function showDangerAlert(message) {
+            // Set pesan ke dalam alert
+            document.getElementById('dangerMessage').innerText = message;
+
+            // Tampilkan alert
+            var alertElement = document.getElementById('dangerAlert');
+            alertElement.classList.remove('d-none'); // Hilangkan class d-none
+
+            // Sembunyikan alert setelah 3 detik
+            setTimeout(function() {
+                alertElement.classList.add('d-none');
+            }, 3000); // 3000 ms = 3 detik
+        }
+    </script>
+
 
     <!-- latest jquery-->
     <script src="../assets/js/jquery.min.js"></script>
