@@ -177,6 +177,8 @@
     <script src="../assets/js/scrollbar/custom.js"></script>
     <!-- Sidebar jquery-->
     <script src="../assets/js/config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- Plugins JS start-->
     @section('scriptPlugins')
         <script src="../assets/js/sidebar-menu.js"></script>

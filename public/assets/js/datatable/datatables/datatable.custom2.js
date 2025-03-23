@@ -3,6 +3,7 @@
     // Basic table example
     $("#basic-1").DataTable();
     $("#tableSubKriteria").DataTable();
+    $("#tableRekapPenilaian").DataTable();
     $("#basic-2").DataTable({
       paging: true,
       ordering: false,
