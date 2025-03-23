@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\RekapanPenilaianBulanan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class RekapPenilaianController extends Controller
 {
@@ -16,6 +17,35 @@ class RekapPenilaianController extends Controller
             ->select('u.nama', DB::raw('COUNT(a.id) as total_scans'))
             ->groupBy('u.nama')
             ->orderByDesc('total_scans')
+            ->get();
+
+
+            $top1ASNEmployeeAttendance = DB::table('absensi as a')
+            ->join('users as u', 'a.user_id', '=', 'u.id')
+            ->select(
+                'u.nama',
+                DB::raw('MONTH(a.scanned_at) as month'),
+                DB::raw('COUNT(a.id) as total_scans')
+            )
+            ->where('u.status_pegawai', 'ASN')
+            ->where('a.scanned_at', '>=', Carbon::now()->subMonths(3))
+            ->groupBy('u.nama', DB::raw('MONTH(a.scanned_at)'))
+            ->orderByDesc(DB::raw('(SELECT COUNT(*) FROM absensi WHERE user_id = u.id AND scanned_at >= "' . Carbon::now()->subMonths(3) . '")'))
+            ->limit(1)
+            ->get();
+
+            $top1NonASNEmployeeAttendance = DB::table('absensi as a')
+            ->join('users as u', 'a.user_id', '=', 'u.id')
+            ->select(
+                'u.nama',
+                DB::raw('MONTH(a.scanned_at) as month'),
+                DB::raw('COUNT(a.id) as total_scans')
+            )
+            ->where('u.status_pegawai', 'Non ASN')
+            ->where('a.scanned_at', '>=', Carbon::now()->subMonths(3))
+            ->groupBy('u.nama', DB::raw('MONTH(a.scanned_at)'))
+            ->orderByDesc(DB::raw('(SELECT COUNT(*) FROM absensi WHERE user_id = u.id AND scanned_at >= "' . Carbon::now()->subMonths(3) . '")'))
+            ->limit(1)
             ->get();
 
 
@@ -36,7 +66,7 @@ class RekapPenilaianController extends Controller
                 ];
             });
 
-            $topAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai')
+        $topAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai')
             ->whereHas('user', function ($query) {
                 $query->where('status_pegawai', 'ASN');
             })
@@ -70,8 +100,10 @@ class RekapPenilaianController extends Controller
         $data = [
             'title' => 'Rekap Penilaian',
             'top_pegawai' => $topEmployees,
+            'top1_asn' => $top1ASNEmployeeAttendance,
+            'top1_nonasn' => $top1NonASNEmployeeAttendance,
             'rekapan' => $rekapan,
-            'topAsn'=>$topAsn,
+            'topAsn' => $topAsn,
             'topNonAsn' => $topNonAsn
         ];
         return view('admin.rekapPenilaian', $data);

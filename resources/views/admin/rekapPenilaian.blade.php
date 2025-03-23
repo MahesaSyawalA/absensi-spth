@@ -18,6 +18,29 @@
             <div class="col-xl-6 col-md-12 box-col-12">
                 <div class="card">
                     <div class="card-header">
+                        <h5>Top 1 Pegawai ASN</h5>
+                    </div>
+                    <div class="card-body chart-block">
+                        <canvas id="chartTop1ASN"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-md-12 box-col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Top 1 Pegawai Non ASN</h5>
+                    </div>
+                    <div class="card-body chart-block">
+                        <canvas id="chartTop1NonASN"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- <div class="row">
+            <div class="col-xl-6 col-md-12 box-col-12">
+                <div class="card">
+                    <div class="card-header">
                         <h5>Pegawai ASN</h5>
                     </div>
                     <div class="card-body chart-block">
@@ -35,7 +58,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="row">
             <div class="col-xl-6 col-md-12 box-col-12">
@@ -128,6 +151,92 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var top1_asn = @json($top1_asn);
+        var top1_nonasn = @json($top1_nonasn);
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        console.log(top1_nonasn);
+
+        const namaTop1AbsensiASN = top1_asn.map(item => item.nama);
+        const namaTop1AbsensiNonASN = top1_nonasn.map(item => item.nama);
+
+        const labelTop1ASN = top1_asn.map(item => months[item.month - 1]);
+        const labelTop1NonASN = top1_nonasn.map(item => months[item.month - 1]);
+
+        const jumlahAbsensiTop1ASN = top1_asn.map(item => item.total_scans);
+        const jumlahAbsensiTop1NonASN = top1_nonasn.map(item => item.total_scans);
+
+        function getLastThreeMonths() {
+            const months = [];
+            const currentDate = new Date();
+
+            for (let i = 2; i >= 0; i--) {
+                let date = new Date();
+                date.setMonth(currentDate.getMonth() - i);
+                months.push(date.toLocaleString('default', {
+                    month: 'long'
+                }));
+            }
+            return months;
+        }
+
+        const ctxTop1ASN = document.getElementById('chartTop1ASN');
+        const ctxTop1NonASN = document.getElementById('chartTop1NonASN');
+
+        new Chart(ctxTop1ASN, {
+            type: 'bar',
+            data: {
+                labels: labelTop1ASN,
+                datasets: [{
+                    label: 'Jumlah absensi',
+                    data: jumlahAbsensiTop1ASN ?? [0,0,0],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: namaTop1AbsensiASN[0] ?? '',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        new Chart(ctxTop1NonASN, {
+            type: 'bar',
+            data: {
+                labels: labelTop1NonASN,
+                datasets: [{
+                    label: 'Jumlah absensi',
+                    data: jumlahAbsensiTop1NonASN ?? [0, 0, 0],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: namaTop1AbsensiNonASN[0] ?? '',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
     <script>
         var topAsnData = @json($topAsn);
         var topNonAsnData = @json($topNonAsn);
@@ -154,31 +263,31 @@
                         }]
                     },
                     options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    var dataset = tooltipItem.dataset;
-                                    var index = tooltipItem.dataIndex;
-                                    var totalAvg = dataset.data[index];
-                                    var totalPenilaian = data[index].total_penilaian;
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        var dataset = tooltipItem.dataset;
+                                        var index = tooltipItem.dataIndex;
+                                        var totalAvg = dataset.data[index];
+                                        var totalPenilaian = data[index].total_penilaian;
 
-                                    return [
-                                        `Total Rata-rata: ${totalAvg.toFixed(2)}`,
-                                        `Total Penilaian: ${totalPenilaian}`
-                                    ];
+                                        return [
+                                            `Total Rata-rata: ${totalAvg.toFixed(2)}`,
+                                            `Total Penilaian: ${totalPenilaian}`
+                                        ];
+                                    }
                                 }
                             }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
                 });
             }
 
