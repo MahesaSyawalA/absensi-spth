@@ -49,7 +49,6 @@ class KriteriaPenilaianController extends Controller
         Kriteria::create([
             'name' => $formattedName,
             'bobot' => $request->bobot,
-            'type' => $request->type,
         ]);
 
         return response()->json(['success' => true, 'message' => 'Kriteria berhasil ditambahkan']);

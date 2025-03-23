@@ -1,10 +1,10 @@
 <?php
-namespace App\Http\Controllers\Client;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class ProfileController extends Controller
+class AdminProfileController extends Controller
 {
     public function index(){
         $user = Auth::user();
@@ -12,7 +12,7 @@ class ProfileController extends Controller
             'title' => 'Profile',
             'user' => $user,
         ];
-        return view('client.profile',$data);
+        return view('admin.profile',$data);
     }
 
 }

@@ -1,4 +1,4 @@
-@extends('client.layout.commonLayout')
+@extends('admin.layout.adminLayout')
 
 @section('title', $title)
 

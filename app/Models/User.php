@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -22,6 +23,7 @@ class User extends Authenticatable
     protected $fillable = [
         'nip',
         'nama',
+        'slug',
         'jabatan',
         'barcode',
         'jabatan',
@@ -29,6 +31,8 @@ class User extends Authenticatable
         'status_pegawai',
         'foto',
         'role',
+        'username',
+        'password',
     ];
 
     /**
@@ -52,5 +56,41 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->role === 'super-admin';
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isPegawai()
+    {
+        return $this->role === 'pegawai';
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->id = Str::uuid(); // Menggunakan UUID
+            $user->slug = User::generateSlug($user->nama, $user->nip);
+        });
+
+    }
+
+    public static function generateSlug($name, $nip)
+    {
+        $nip_last3 = substr($nip, -3); // Ambil 3 angka terakhir dari NIP
+        $slug = Str::slug($name) . '-' . $nip_last3;
+
+        // Pastikan slug unik
+        $count = User::where('slug', 'LIKE', "$slug%")->count();
+        return $count ? "{$slug}-{$count}" : $slug;
     }
 }
