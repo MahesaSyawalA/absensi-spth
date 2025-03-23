@@ -39,7 +39,7 @@
                         @endif
                     </div>
                     <ul class="profile-dropdown onhover-show-div">
-                        <li><a href="../template/sign-up.html"><i data-feather="user"></i><span>Account
+                        <li><a href="../admin/profile"><i data-feather="user"></i><span>Account
                                 </span></a></li>
                         <li>
                             <a href="#" id="logoutLink">

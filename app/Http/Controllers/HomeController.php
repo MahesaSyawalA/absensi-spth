@@ -13,7 +13,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $staffs = User::select('slug','nip', 'nama', 'jabatan', 'foto')->get();
+        $staffs = User::select('slug','nip', 'nama', 'jabatan', 'foto')->where('role','pegawai')->get();
         $data = [
             'staffs' => $staffs,
         ];
