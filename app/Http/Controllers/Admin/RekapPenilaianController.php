@@ -15,7 +15,6 @@ class RekapPenilaianController extends Controller
         ->select('u.nama', DB::raw('COUNT(a.id) as total_scans'))
         ->groupBy('u.nama')
         ->orderByDesc('total_scans')
-        ->limit(10)
         ->get();
 
         $data = [
