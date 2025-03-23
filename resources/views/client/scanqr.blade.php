@@ -37,6 +37,7 @@
                         getLocation();
                     } else {
                         alert("Akses lokasi tidak diizinkan. Harap izinkan akses pada browser.");
+                        document.getElementById("spinner").style.display = "none";
                         document.getElementById("retryButton").style.display = "block";
                     }
 
@@ -59,6 +60,7 @@
                         
                         // remove previous state on elements
                         document.getElementById("spinner").style.display = "block";
+                        document.getElementById("retryButton").style.display = "none";
                         document.getElementById("result").innerText = "";
                         document.getElementById("absen_ke").innerText = "";
                         document.getElementById("latlon").innerText = "";
@@ -112,6 +114,8 @@
                     },
                     (error) => {
                         alert('Gagal mendapatkan lokasi: ' + error.message);
+                        document.getElementById("spinner").style.display = "none";
+                        document.getElementById("retryButton").style.display = "block";
                     }
                 );
             }
