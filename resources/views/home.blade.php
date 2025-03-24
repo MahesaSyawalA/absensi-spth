@@ -131,20 +131,20 @@
                     <div class="col-xl-6 col-md-12 box-col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Pegawai ASN</h5>
+                                <h5>Top Penilaian Pegawai ASN</h5>
                             </div>
                             <div class="card-body chart-block">
-                                <canvas id="myBarGraph"></canvas>
+                                <canvas id="graphTopPenilaianAsn"></canvas>
                             </div>
                         </div>
                     </div>
                     <div class="col-xl-6 col-md-12 box-col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Pegawai Non ASN</h5>
+                                <h5>Top Penilian Pegawai Non ASN</h5>
                             </div>
                             <div class="card-body chart-block">
-                                <canvas id="myBarGraph2"></canvas>
+                                <canvas id="graphTopPenilaianNonAsn"></canvas>
                             </div>
                         </div>
                     </div>
@@ -226,6 +226,65 @@
         });
     </script>
 
+    <script>
+        var topAsnData = @json($topAsn);
+        var topNonAsnData = @json($topNonAsn);
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var ctxAsn = document.getElementById("graphTopPenilaianAsn");
+            var ctxNonAsn = document.getElementById("graphTopPenilaianNonAsn");
+
+            if (!ctxAsn || !ctxNonAsn) {
+                console.error("Canvas tidak ditemukan!");
+                return;
+            }
+
+            function createChart(ctx, data, label) {
+                new Chart(ctx.getContext("2d"), {
+                    type: "bar",
+                    data: {
+                        labels: data.map(item => item.nama),
+                        datasets: [{
+                            label: label,
+                            backgroundColor: "#7366FF",
+                            borderColor: "#7366FF",
+                            data: data.map(item => item.total_avg),
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        var dataset = tooltipItem.dataset;
+                                        var index = tooltipItem.dataIndex;
+                                        var totalAvg = dataset.data[index];
+                                        var totalPenilaian = data[index].total_penilaian;
+
+                                        return [
+                                            `Total Rata-rata: ${totalAvg.toFixed(2)}`,
+                                            `Total Penilaian: ${totalPenilaian}`
+                                        ];
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            createChart(ctxAsn, topAsnData, "Top Penilaian ASN");
+            createChart(ctxNonAsn, topNonAsnData, "Top Penilaian Non ASN");
+        });
+    </script>
+
     <!-- latest jquery-->
     <script src="../assets/js/jquery.min.js"></script>
     <!-- Bootstrap js-->
@@ -252,7 +311,8 @@
     <script src="../assets/js/typeahead/typeahead.custom.js"></script>
     <script src="../assets/js/typeahead-search/handlebars.js"></script>
     <script src="../assets/js/typeahead-search/typeahead-custom.js"></script>
-    <script src="../assets/js/chart/chartjs/chart.min.js"></script>
+    {{-- <script src="../assets/js/chart/chartjs/chart.min.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../assets/js/chart/chartjs/chart.custom.js"></script>
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
