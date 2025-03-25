@@ -159,8 +159,8 @@
                                 <div class="col-md-6 col-lg-4 mb-4 d-flex align-items-stretch">
                                     <div class="card w-100">
                                         <!-- Foto Staff -->
-                                        <img src="{{ asset('storage/' . $staff->foto) }}" class="card-img-top"
-                                            alt="{{ $staff->nama }}" style="height: 200px; object-fit: cover;">
+                                        <img src="{{ asset($staff->foto) }}" class="card-img-top"
+                                            alt="{{ $staff->nama }}" style="height: 430px; object-fit: contain;">
 
                                         <div class="card-body d-flex flex-column">
                                             <!-- Nama Staff -->
@@ -186,12 +186,6 @@
                             @endforeach
                         </div>
 
-                        <!-- Pagination (jika menggunakan paginate) -->
-                        {{-- @if ($staffs->hasPages())
-                            <div class="d-flex justify-content-center mt-4">
-                                {{ $staffs->links() }}
-                            </div>
-                        @endif --}}
                     </div>
                 </div>
                 <!-- Container-fluid body Ends-->
@@ -230,17 +224,21 @@
         var topAsnData = @json($topAsn);
         var topNonAsnData = @json($topNonAsn);
 
-        document.addEventListener("DOMContentLoaded", function() {
-            var ctxAsn = document.getElementById("graphTopPenilaianAsn");
-            var ctxNonAsn = document.getElementById("graphTopPenilaianNonAsn");
+        document.addEventListener("DOMContentLoaded", function () {
+            var ctxAsn = document.getElementById("graphTopPenilaianAsn")?.getContext("2d");
+            var ctxNonAsn = document.getElementById("graphTopPenilaianNonAsn")?.getContext("2d");
 
             if (!ctxAsn || !ctxNonAsn) {
                 console.error("Canvas tidak ditemukan!");
                 return;
             }
 
+            // Konversi objek menjadi array
+            var topAsnArray = Object.values(topAsnData);
+            var topNonAsnArray = Object.values(topNonAsnData);
+
             function createChart(ctx, data, label) {
-                new Chart(ctx.getContext("2d"), {
+                new Chart(ctx, { // Gunakan ctx langsung
                     type: "bar",
                     data: {
                         labels: data.map(item => item.nama),
@@ -257,10 +255,9 @@
                         plugins: {
                             tooltip: {
                                 callbacks: {
-                                    label: function(tooltipItem) {
-                                        var dataset = tooltipItem.dataset;
+                                    label: function (tooltipItem) {
                                         var index = tooltipItem.dataIndex;
-                                        var totalAvg = dataset.data[index];
+                                        var totalAvg = data[index].total_avg;
                                         var totalPenilaian = data[index].total_penilaian;
 
                                         return [
@@ -280,8 +277,9 @@
                 });
             }
 
-            createChart(ctxAsn, topAsnData, "Top Penilaian ASN");
-            createChart(ctxNonAsn, topNonAsnData, "Top Penilaian Non ASN");
+            // Panggil fungsi dengan data yang sudah dikonversi
+            createChart(ctxAsn, topAsnArray, "Top Penilaian ASN");
+            createChart(ctxNonAsn, topNonAsnArray, "Top Penilaian Non ASN");
         });
     </script>
 
