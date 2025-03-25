@@ -173,7 +173,7 @@
                 <div class="modal-body">
                     <form id="editUserForm">
                         <div class="form-group mb-2">
-                            <label for="username">Username</label>
+                            <label for="username" class="d-flex justify-content-between">Username <span>isi jika ingin mengubah</span></label>
                             <input type="text" class="form-control" id="editUsername" name="username" required>
                         </div>
                         <div class="form-group mb-2">
@@ -360,7 +360,7 @@
                     .then(data => {
                         console.log(data);
                         // Isi form dengan data user
-                        document.getElementById('editUsername').value = data.user.username;
+                        // document.getElementById('editUsername').value = data.user.username;
                         document.getElementById('editNip').value = data.user.nip;
                         document.getElementById('editNama').value = data.user.nama;
                         document.getElementById('editJabatan').value = data.user.jabatan;
