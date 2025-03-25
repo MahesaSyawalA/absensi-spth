@@ -13,7 +13,8 @@
     <div id="latlon" class="f-15 m-t-5 text-center"></div>
     <div id="time" class="f-24 m-t-5 text-center"></div>
     <div id="datetime" class="f-15 m-t-5 text-center"></div>
-    <div id="distance" class="f-15 m-t-5 text-center"></div>
+    <div id="distanceFromGapura" class="f-15 m-t-5 text-center"></div>
+    <div id="distanceFromOffice" class="f-15 m-t-5 text-center"></div>
 
     <button id="retryButton" class="btn btn-primary"
         style="display: none; width: 50%; margin-inline: auto; margin-top: 20px">Ulangi</button>
@@ -66,7 +67,8 @@
                         document.getElementById("latlon").innerText = "";
                         document.getElementById("time").innerText = "";
                         document.getElementById("datetime").innerText = "";
-                        document.getElementById("distance").innerText = "";
+                        document.getElementById("distanceFromGapura").innerText = "";
+                        document.getElementById("distanceFromOffice").innerText = "";
                         document.getElementById("back-to-prevpage").style.display = "none";
 
                         fetch('/api/attendance', {
@@ -87,9 +89,14 @@
                                     document.getElementById("spinner").style.display = "none";
                                     document.getElementById("result").innerText = data.message;
 
-                                    if (data.distance) {
-                                        document.getElementById("distance").innerText =
-                                            `Radius dari tempat absen: ${data.distance} meter`;
+                                    if (data.distanceFromGapura) {
+                                        document.getElementById("distanceFromGapura").innerText =
+                                            `Radius dari Gapura: ${data.distanceFromGapura} meter`;
+                                    }
+
+                                    if (data.distanceFromOffice) {
+                                        document.getElementById("distanceFromOffice").innerText =
+                                            `Radius dari Kantor: ${data.distanceFromOffice} meter`;
                                     }
 
                                     if (data.latitude & data.longitude) {

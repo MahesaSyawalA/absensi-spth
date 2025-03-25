@@ -28,10 +28,14 @@ class ScanController extends Controller
         $officeLatitude = -6.92972;
         $officeLongitude = 107.76972;
 
-        $distance = $this->calculateDistance($officeLatitude, $officeLongitude, $userLatitude, $userLongitude);
+        $gapuraLatitude = -6.886094;
+        $gapuraLongitude = 107.763140;
+
+        $distanceFromOffice = $this->calculateDistance($officeLatitude, $officeLongitude, $userLatitude, $userLongitude);
+        $distanceFromGapura = $this->calculateDistance($gapuraLatitude, $gapuraLongitude, $userLatitude, $userLongitude);
         $radius = 5; // radius 5 meter
 
-        if ($distance <= $radius) {
+        if ($distanceFromOffice <= $radius || $distanceFromGapura <= $radius) {
 
             $absen1_start = '05:30';
             $absen1_end = '07:00';
@@ -102,7 +106,8 @@ class ScanController extends Controller
                 'message' => "Anda berhasil absen. ($keterangan)",
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
-                'distance' => $distance,
+                'distanceFromOffice' => $distanceFromOffice,
+                'distanceFromGapura' => $distanceFromGapura,
                 'absen_ke' => $absen_ke ?? null,
                 'datetime' => $attendanceDateTime->toDayDateTimeString(),
             ], 200);
@@ -111,7 +116,8 @@ class ScanController extends Controller
                 'message' => 'Tidak dapat absen, anda berada diluar area absen.',
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
-                'distance' => $distance,
+                'distanceFromOffice' => $distanceFromOffice,
+                'distanceFromGapura' => $distanceFromGapura,
             ], 403);
         }
     }
