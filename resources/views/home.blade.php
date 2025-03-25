@@ -160,7 +160,7 @@
                                     <div class="card w-100">
                                         <!-- Foto Staff -->
                                         <img src="{{ asset($staff->foto) }}" class="card-img-top"
-                                            alt="{{ $staff->nama }}" style="height: 200px; object-fit: cover;">
+                                            alt="{{ $staff->nama }}" style="height: 430px; object-fit: contain;">
 
                                         <div class="card-body d-flex flex-column">
                                             <!-- Nama Staff -->
@@ -186,12 +186,6 @@
                             @endforeach
                         </div>
 
-                        <!-- Pagination (jika menggunakan paginate) -->
-                        {{-- @if ($staffs->hasPages())
-                            <div class="d-flex justify-content-center mt-4">
-                                {{ $staffs->links() }}
-                            </div>
-                        @endif --}}
                     </div>
                 </div>
                 <!-- Container-fluid body Ends-->
