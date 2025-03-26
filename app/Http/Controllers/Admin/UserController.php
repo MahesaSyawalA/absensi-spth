@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -21,6 +25,26 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        // inisialisasi variable untuk bikin slug dan QR
+        $last3digitnim = substr($request->nip, -3);
+        $slug_pegawai = str_replace(" ", "-", strtolower($request->nama)) . "-" . $last3digitnim;
+        $qr_address = "https://sidikspth.com/penilaian-staff/$slug_pegawai";
+
+        // Create a PNG renderer for QR
+        $renderer = new ImageRenderer(
+            new RendererStyle(400),
+            new ImagickImageBackEnd()
+        );
+        $writer = new Writer($renderer);
+
+        // bikin QR pegawai, lalu simpen
+        $qr_pegawai = $writer->writeString($qr_address);
+        $path = public_path("images/qr/$slug_pegawai");
+        if (!file_exists(public_path('images/qr'))) {
+            mkdir(public_path('images/qr'), 0777, true);
+        }
+        file_put_contents($path, $qr_pegawai);
+
         // Validasi data
         $request->validate([
             'nip' => 'required|unique:users,nip|regex:/^[a-zA-Z0-9]+$/',
@@ -57,6 +81,8 @@ class UserController extends Controller
             'username.min' => 'Username minimal harus memiliki 4 karakter.',
         ]);
 
+        // inisialisasi variabel fotoPath biar nggak error kalau gaada foto pegawai
+        $fotoPath = '';
 
         // Simpan foto jika ada
         if ($request->hasFile('foto')) {
@@ -71,6 +97,7 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
             'nip' => $request->nip,
             'nama' => $request->nama,
+            'slug' => $slug_pegawai,
             'jabatan' => $request->jabatan,
             'tanggal_lahir' => $request->tanggal_lahir,
             'status_pegawai' => $request->status_pegawai,
