@@ -333,7 +333,7 @@
                             // Reload halaman atau update tampilan (opsional)
                             window.location.reload();
                         } else {
-                            showDangerAlert('Gagal menyimpan user: ' + data.message);
+                            showDangerAlert('Gagal menyimpan user: \n' + data.message);
                         }
                     })
                     .catch(error => {
