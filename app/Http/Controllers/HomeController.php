@@ -3,24 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kriteria;
+use App\Models\PenilaianKhusus;
 use App\Models\PenilaianMasyarakat;
 use App\Models\RekapanPenilaianBulanan;
 use App\Models\SubKriteria;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $topAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai')
+        $topAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai,foto')
             ->whereHas('user', function ($query) {
                 $query->where('status_pegawai', 'ASN');
             })
             ->get()
             ->map(function ($item) {
                 return [
+                    'foto' => $item->user->foto,
                     'nama' => $item->user->nama,
                     'total_penilaian' => $item->total_penilaian,
                     'total_avg' => ($item->avg_perilaku_petugas + $item->avg_penampilan + $item->avg_kecepatan_pelayanan + $item->avg_ketepatan_transparansi) / 4
@@ -29,13 +32,14 @@ class HomeController extends Controller
             ->sortByDesc('total_avg') // Urutkan berdasarkan total_avg dari terbesar
             ->take(1); // Ambil 10 besar
 
-        $topNonAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai')
+        $topNonAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai,foto')
             ->whereHas('user', function ($query) {
                 $query->where('status_pegawai', 'Non ASN');
             })
             ->get()
             ->map(function ($item) {
                 return [
+                    'foto' => $item->user->foto,
                     'nama' => $item->user->nama,
                     'total_penilaian' => $item->total_penilaian,
                     'total_avg' => ($item->avg_perilaku_petugas + $item->avg_penampilan + $item->avg_kecepatan_pelayanan + $item->avg_ketepatan_transparansi) / 4
@@ -44,10 +48,12 @@ class HomeController extends Controller
             ->sortByDesc('total_avg') // Urutkan berdasarkan total_avg dari terbesar
             ->take(1);
 
+        // dd($topAsn);
+
         $staffs = User::select('slug', 'nip', 'nama', 'jabatan', 'foto')->where('role', 'pegawai')->get();
         $data = [
             'staffs' => $staffs,
-            'topAsn'=>$topAsn,
+            'topAsn' => $topAsn,
             'topNonAsn' => $topNonAsn
         ];
         return view('home', $data);
@@ -67,6 +73,13 @@ class HomeController extends Controller
 
     public function storePenilaian(Request $request)
     {
+        // Ambil user yang sedang login
+        $user = Auth::user();
+
+        // Ambil role dari user yang sedang login
+        $role = $user ? $user->role : null;
+
+        // Validasi request
         $request->validate([
             'nama' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -76,24 +89,60 @@ class HomeController extends Controller
             'subKriteria.*' => 'required|integer|min:10|max:50',
         ]);
 
-
         // Cari user berdasarkan slug
         $selectedUser = User::select('id')->where('slug', $request->slug)->firstOrFail();
 
+        // Ambil bulan dan tahun saat ini
+        $bulan = date('m');
+        $tahun = date('Y');
+
         DB::beginTransaction();
         try {
-            // Simpan data ke tabel `penilaian_masyarakat`
-            $penilaian = PenilaianMasyarakat::create([
-                'user_id' => $selectedUser->id,
-                'nama' => $request->nama,
-                'email' => $request->email,
-                'tujuan' => $request->tujuan,
-                'pelayanan' => $request->pelayanan,
-                'perilaku_petugas' => $request->subKriteria[5] ?? null,
-                'penampilan' => $request->subKriteria[6] ?? null,
-                'kecepatan_pelayanan' => $request->subKriteria[7] ?? null,
-                'ketepatan_transparansi' => $request->subKriteria[8] ?? null,
-            ]);
+            if ($role === 'penilai') {
+                // Cek apakah ada data untuk user_id di bulan & tahun ini
+                $penilaian = PenilaianKhusus::where('user_id', $selectedUser->id)
+                    ->where('bulan', $bulan)
+                    ->where('tahun', $tahun)
+                    ->first();
+
+                $data = [
+                    'penilai_id' => $user->id,
+                    'user_id' => $selectedUser->id,
+                    'nama' => $request->nama,
+                    'email' => $request->email,
+                    'tujuan' => $request->tujuan,
+                    'pelayanan' => $request->pelayanan,
+                    'perilaku_petugas' => $request->subKriteria[5] ?? null,
+                    'penampilan' => $request->subKriteria[6] ?? null,
+                    'kecepatan_pelayanan' => $request->subKriteria[7] ?? null,
+                    'ketepatan_transparansi' => $request->subKriteria[8] ?? null,
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
+                ];
+
+                if ($penilaian) {
+                    // Jika sudah ada, update data lama
+                    $penilaian->update($data);
+                } else {
+                    // Jika belum ada, buat data baru
+                    PenilaianKhusus::create($data);
+                }
+            } else {
+                // Jika bukan "penilai", simpan ke PenilaianMasyarakat
+                $penilaian = PenilaianMasyarakat::create([
+                    'user_id' => $selectedUser->id,
+                    'nama' => $request->nama,
+                    'email' => $request->email,
+                    'tujuan' => $request->tujuan,
+                    'pelayanan' => $request->pelayanan,
+                    'perilaku_petugas' => $request->subKriteria[5] ?? null,
+                    'penampilan' => $request->subKriteria[6] ?? null,
+                    'kecepatan_pelayanan' => $request->subKriteria[7] ?? null,
+                    'ketepatan_transparansi' => $request->subKriteria[8] ?? null,
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
+                ]);
+            }
 
             DB::commit();
             return response()->json(['message' => 'Penilaian berhasil disimpan'], 201);

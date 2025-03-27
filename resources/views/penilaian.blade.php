@@ -120,7 +120,7 @@
                         <div class="container">
                             <div class="row align-items-center">
                                 <div class="col-md-4 text-center"> <!-- Gambar diperlebar -->
-                                    <img class="img-fluid" src="{{ asset('storage/' . $selectedUser->foto) }}"
+                                    <img class="img-fluid" src="{{ asset( $selectedUser->foto) }}"
                                         alt="Foto Staff">
                                 </div>
 
