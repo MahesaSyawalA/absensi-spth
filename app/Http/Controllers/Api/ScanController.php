@@ -25,8 +25,8 @@ class ScanController extends Controller
         $userLatitude = $request->latitude;
         $userLongitude = $request->longitude;
 
-        $officeLatitude = -6.92972;
-        $officeLongitude = 107.76972;
+        $officeLatitude = -6.932888;
+        $officeLongitude = 107.771096;
 
         $gapuraLatitude = -6.886094;
         $gapuraLongitude = 107.763140;
