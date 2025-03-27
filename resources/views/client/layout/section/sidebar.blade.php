@@ -30,6 +30,7 @@
                                 <use href="../assets/svg/icon-sprite.svg#stroke-user"></use>
                             </svg><span>Profile</span></a>
                     </li>
+                    @if($userData['role'] == 'penilai')
                     <li class="sidebar-list"><i class="fa-solid fa-thumbtack"></i><a
                             class="sidebar-link sidebar-title link-nav" href="/penilai">
                             <svg class="stroke-icon">
@@ -37,8 +38,10 @@
                             </svg>
                             <svg class="fill-icon">
                                 <use href="../assets/svg/icon-sprite.svg#stroke-user"></use>
-                            </svg><span>Data List Staff</span></a>
+                            </svg><span>List Penilaian Staff</span></a>
                     </li>
+                    @endif
+                    @if($userData['role'] != 'penilai')
                     <li class="sidebar-list"><i class="fa-solid fa-thumbtack"></i><a
                             class="sidebar-link sidebar-title link-nav active" href="/staff/absensi">
                             <svg class="stroke-icon">
@@ -48,6 +51,7 @@
                                 <use href="../assets/svg/icon-sprite.svg#stroke-reports"></use>
                             </svg><span>Absensi</span></a>
                     </li>
+                    @endif
                 </ul>
             </div>
             <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
