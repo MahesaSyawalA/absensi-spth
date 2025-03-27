@@ -25,11 +25,11 @@ class ScanController extends Controller
         $userLatitude = $request->latitude;
         $userLongitude = $request->longitude;
 
-        $officeLatitude = -6.932888;
-        $officeLongitude = 107.771096;
+        $officeLatitude = -6.9328394;
+        $officeLongitude = 107.771067;
 
-        $gapuraLatitude = -6.886094;
-        $gapuraLongitude = 107.763140;
+        $gapuraLatitude = -6.886051;
+        $gapuraLongitude = 107.763136;
 
         $distanceFromOffice = $this->calculateDistance($officeLatitude, $officeLongitude, $userLatitude, $userLongitude);
         $distanceFromGapura = $this->calculateDistance($gapuraLatitude, $gapuraLongitude, $userLatitude, $userLongitude);
