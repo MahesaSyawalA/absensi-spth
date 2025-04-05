@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class PenilaianKhusus extends Model
 {
@@ -30,24 +31,61 @@ class PenilaianKhusus extends Model
     {
         parent::boot();
 
-        static::creating(function ($penilaian) {
-            // Cek apakah sudah ada data untuk user_id, bulan, dan tahun yang sama
-            $existing = PenilaianKhusus::where('user_id', $penilaian->user_id)
-                ->where('bulan', $penilaian->bulan)
-                ->where('tahun', $penilaian->tahun)
-                ->first();
+        static::created(function ($penilaian) {
+            static::updateRekapanPenilaianAkhir($penilaian);
+        });
 
-            if ($existing) {
-                // Jika ada, update data lama
-                $existing->update($penilaian->toArray());
-                return false; // Batalkan create baru, hanya update data lama
-            }
+        static::updated(function ($penilaian) {
+            static::updateRekapanPenilaianAkhir($penilaian);
         });
     }
+
+
+    private static function updateRekapanPenilaianAkhir(PenilaianKhusus $penilaian)
+    {
+        $user_id = $penilaian->user_id;
+        $bulan   = $penilaian->bulan;
+        $tahun   = $penilaian->tahun;
+
+        // AVG Penilaian Khusus (default 0 jika belum ada)
+        $avg_penilai = PenilaianKhusus::where(compact('user_id', 'bulan', 'tahun'))
+            ->exists()
+            ? PenilaianKhusus::where(compact('user_id', 'bulan', 'tahun'))
+            ->avg(DB::raw('(perilaku_petugas + penampilan + kecepatan_pelayanan + ketepatan_transparansi) / 4'))
+            : 0;
+
+        // AVG Masyarakat
+        $nilai_masyarakat = RekapanPenilaianBulanan::where(compact('user_id', 'bulan', 'tahun'))
+            ->exists()
+            ? RekapanPenilaianBulanan::where(compact('user_id', 'bulan', 'tahun'))
+            ->avg(DB::raw('(avg_perilaku_petugas + avg_penampilan + avg_kecepatan_pelayanan + avg_ketepatan_transparansi) / 4'))
+            : 0;
+
+        // Absensi (default 0)
+        $nilai_absensi = RekapanAbsensiBulanan::where(compact('user_id', 'bulan', 'tahun'))
+            ->value('total_poin') ?? 0;
+
+        // Hitung total
+        $total_nilai = ($nilai_absensi * 0.30)
+            + ($nilai_masyarakat * 0.50)
+            + ($avg_penilai * 0.20);
+            // dd($total_nilai);
+
+        // Buat atau update rekapan akhir
+        RekapanNilaiAkhir::updateOrCreate(
+            compact('user_id', 'bulan', 'tahun'),
+            [
+                'nilai_absensi'    => $nilai_absensi,
+                'nilai_masyarakat' => $nilai_masyarakat,
+                'nilai_penilai'    => $avg_penilai,
+                'nilai_akhir'      => $total_nilai,
+            ]
+        );
+    }
+
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-
 }

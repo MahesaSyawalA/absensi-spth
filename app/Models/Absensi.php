@@ -27,7 +27,7 @@ class Absensi extends Model
             $tahun = Carbon::now()->year;
 
             // Tentukan poin berdasarkan keterangan
-            $poin = ($absensi->keterangan === 'Terlambat') ? 75 : 100;
+            $poin = ($absensi->keterangan === 'Terlambat') ? 3 : 5;
 
             // Cek apakah sudah ada rekapan untuk user ini
             $rekapan = DB::table('rekapan_absensi_bulanan')

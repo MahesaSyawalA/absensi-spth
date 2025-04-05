@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class RekapanAbsensiBulananan extends Model
+class RekapanAbsensiBulanan extends Model
 {
     //
     protected $table = 'rekapan_absensi_bulanan';
@@ -18,5 +18,5 @@ class RekapanAbsensiBulananan extends Model
         'total_poin',
         'avg_poin',
     ];
-    
+
 }

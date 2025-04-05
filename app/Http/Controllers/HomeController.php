@@ -73,13 +73,9 @@ class HomeController extends Controller
 
     public function storePenilaian(Request $request)
     {
-        // Ambil user yang sedang login
         $user = Auth::user();
-
-        // Ambil role dari user yang sedang login
         $role = $user ? $user->role : null;
 
-        // Validasi request
         $request->validate([
             'nama' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -89,18 +85,17 @@ class HomeController extends Controller
             'subKriteria.*' => 'required|integer|min:10|max:50',
         ]);
 
-        // Cari user berdasarkan slug
         $selectedUser = User::select('id')->where('slug', $request->slug)->firstOrFail();
 
-        // Ambil bulan dan tahun saat ini
         $bulan = date('m');
         $tahun = date('Y');
 
         DB::beginTransaction();
         try {
             if ($role === 'penilai') {
-                // Cek apakah ada data untuk user_id di bulan & tahun ini
+                // Perhatikan perubahan di query ini: tambah where penilai_id
                 $penilaian = PenilaianKhusus::where('user_id', $selectedUser->id)
+                    ->where('penilai_id', $user->id)
                     ->where('bulan', $bulan)
                     ->where('tahun', $tahun)
                     ->first();
@@ -121,15 +116,12 @@ class HomeController extends Controller
                 ];
 
                 if ($penilaian) {
-                    // Jika sudah ada, update data lama
                     $penilaian->update($data);
                 } else {
-                    // Jika belum ada, buat data baru
                     PenilaianKhusus::create($data);
                 }
             } else {
-                // Jika bukan "penilai", simpan ke PenilaianMasyarakat
-                $penilaian = PenilaianMasyarakat::create([
+                PenilaianMasyarakat::create([
                     'user_id' => $selectedUser->id,
                     'nama' => $request->nama,
                     'email' => $request->email,
