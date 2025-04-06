@@ -25,7 +25,7 @@
                 <li class="profile-nav onhover-dropdown pe-0 py-0">
                     <div class="d-flex profile-media">
                         @if ($userData)
-                        <img class="b-r-10" src="{{ asset('storage/'.$userData['foto']) }}" alt="" style="max-height:40px; max-width:40px;">
+                        <img class="b-r-10" src="{{ asset($userData['foto']) }}" alt="" style="max-height:40px; max-width:40px;">
                             <div class="flex-grow-1"><span>{{ $userData['nama'] }}</span>
                                 <p class="mb-0">{{ $userData['role'] }} <i class="middle fa-solid fa-angle-down"></i>
                                 </p>
@@ -39,7 +39,7 @@
                         @endif
                     </div>
                     <ul class="profile-dropdown onhover-show-div">
-                        <li><a href="../template/sign-up.html"><i data-feather="user"></i><span>Account
+                        <li><a href="../admin/profile"><i data-feather="user"></i><span>Account
                                 </span></a></li>
                         <li>
                             <a href="#" id="logoutLink">

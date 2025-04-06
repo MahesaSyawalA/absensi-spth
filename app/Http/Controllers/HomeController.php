@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kriteria;
 use App\Models\PenilaianMasyarakat;
+use App\Models\RekapanPenilaianBulanan;
 use App\Models\SubKriteria;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -13,9 +14,41 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $staffs = User::select('slug','nip', 'nama', 'jabatan', 'foto')->get();
+        $topAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai')
+            ->whereHas('user', function ($query) {
+                $query->where('status_pegawai', 'ASN');
+            })
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'nama' => $item->user->nama,
+                    'total_penilaian' => $item->total_penilaian,
+                    'total_avg' => ($item->avg_perilaku_petugas + $item->avg_penampilan + $item->avg_kecepatan_pelayanan + $item->avg_ketepatan_transparansi) / 4
+                ];
+            })
+            ->sortByDesc('total_avg') // Urutkan berdasarkan total_avg dari terbesar
+            ->take(1); // Ambil 10 besar
+
+        $topNonAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai')
+            ->whereHas('user', function ($query) {
+                $query->where('status_pegawai', 'Non ASN');
+            })
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'nama' => $item->user->nama,
+                    'total_penilaian' => $item->total_penilaian,
+                    'total_avg' => ($item->avg_perilaku_petugas + $item->avg_penampilan + $item->avg_kecepatan_pelayanan + $item->avg_ketepatan_transparansi) / 4
+                ];
+            })
+            ->sortByDesc('total_avg') // Urutkan berdasarkan total_avg dari terbesar
+            ->take(1);
+
+        $staffs = User::select('slug', 'nip', 'nama', 'jabatan', 'foto')->where('role', 'pegawai')->get();
         $data = [
             'staffs' => $staffs,
+            'topAsn'=>$topAsn,
+            'topNonAsn' => $topNonAsn
         ];
         return view('home', $data);
     }
@@ -27,7 +60,7 @@ class HomeController extends Controller
         $data = [
             'kriteriaWithSub' => $kriteriaWithSub,
             'selectedUser' => $selectedUser,
-            'slug'=>$slug,
+            'slug' => $slug,
         ];
         return view('penilaian', $data);
     }

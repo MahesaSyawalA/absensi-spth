@@ -16,10 +16,6 @@
         <div class="card">
             <div class="card-header pb-0 card-no-border d-flex justify-content-between">
                 <h5>Kriteria Penilaian</h5>
-                <button class="btn btn-success d-flex align-items-center gap-2" type="button" data-bs-toggle="modal"
-                    data-original-title="Add New Kriteria" data-bs-target="#createKriteriaModal"><i
-                        class="fa-solid fa-plus"></i>
-                    Add New Kriteria</button>
             </div>
             <div class="card-body">
                 <div class="table-responsive custom-scrollbar">
@@ -28,7 +24,6 @@
                             <tr>
                                 <th>Nama Kriteria</th>
                                 <th>Bobot Persentase</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,17 +31,6 @@
                                 <tr>
                                     <td>{{ ucwords(str_replace('_', ' ', $i->name)) }}</td>
                                     <td>{{ $i->bobot }}</td>
-                                    <td>
-                                        <ul class="action">
-                                            <li class="delete">
-                                                <button class="btn btn-light" type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#deleteKriteriaModal" data-id="{{ $i->uuid }}"
-                                                    data-nama="{{ ucwords(str_replace('_', ' ', $i->name)) }}">
-                                                    <i class="fa-solid fa-trash-can"></i>
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

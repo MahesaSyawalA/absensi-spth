@@ -39,17 +39,7 @@
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         <div class="ttl-info text-start">
-                            <h6><i class="fa-solid fa-envelope pe-2"></i> Email</h6><span>william@jourrapide.com</span>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="ttl-info text-start">
                             <h6><i class="fa-solid fa-calendar-days pe-2"></i>Tanggal Lahir</h6><span>{{$user->tanggal_lahir}}</span>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="ttl-info text-start">
-                            <h6><i class="fa-solid fa-phone pe-2"></i>Contact Us</h6><span>India +91 123-456-7890</span>
                         </div>
                     </div>
                 </div>
