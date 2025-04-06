@@ -53,3 +53,5 @@ Route::middleware(['auth', 'is_pegawai'])->group(function () {
 });
 
 Route::get('/penilai',[PenilaiController::class,'index']);
+Route::get('/print',[HomeController::class,'print'])->name('print-rekap-penilaian');
+

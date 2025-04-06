@@ -14,37 +14,50 @@
 
 @section('content')
     <div>
-        <form action="{{ route('admin.index') }}" method="GET">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div class="row">
-                            <div class="col">
-                                <label class="form-label">Bulan Awal</label>
-                                <select class="form-select" name="bulan_awal" required>
-                                    <option selected disabled value="">Pilih</option>
-                                    @for ($i = 1; $i <= 12; $i++)
-                                        <option value="{{ $i }}">{{ $i }}</option>
-                                    @endfor
-                                </select>
-                            </div>
-                            <div class="col">
-                                <label class="form-label">Bulan Akhir</label>
-                                <select class="form-select" name="bulan_akhir" required>
-                                    <option selected disabled value="">Pilih</option>
-                                    @for ($i = 1; $i <= 12; $i++)
-                                        <option value="{{ $i }}">{{ $i }}</option>
-                                    @endfor
-                                </select>
-                            </div>
-                            <div class="col d-flex align-items-end pb-1">
-                                <button class="btn btn-primary w-100" type="submit">Filter</button>
-                            </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-end rounded">
+                    <form class="d-flex align-items-end gap-3" action="{{ route('admin.index') }}" method="GET">
+                        <div>
+                            <label class="form-label">Bulan Awal</label>
+                            <select class="form-select" name="bulan_awal" required id="bulan_awal">
+                                <option selected disabled value="">Pilih</option>
+                                @for ($i = 1; $i <= 12; $i++)
+                                    <option value="{{ $i }}" @if (request('bulan_awal') == $i) selected @endif>
+                                        {{ $i }}</option>
+                                @endfor
+                            </select>
                         </div>
-                    </div>
+
+                        <div>
+                            <label class="form-label">Bulan Akhir</label>
+                            <select class="form-select" name="bulan_akhir" required id="bulan_akhir">
+                                <option selected disabled value="">Pilih</option>
+                                @for ($i = 1; $i <= 12; $i++)
+                                    <option value="{{ $i }}" @if (request('bulan_akhir') == $i) selected @endif>
+                                        {{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+
+                        <div>
+                            <button class="btn btn-primary" type="submit" style="height: 38px;">
+                                <i class="fa fa-filter me-2"></i> Filter
+                            </button>
+                        </div>
+                    </form>
+
+                    <form action="{{ route('print-rekap-penilaian') }}" method="GET" target="_blank">
+                        <input type="hidden" name="bulan_awal" value="{{ request('bulan_awal') }}">
+                        <input type="hidden" name="bulan_akhir" value="{{ request('bulan_akhir') }}">
+                        <button class="btn btn-success" type="submit" id="downloadBtn"
+                            @if (!request('bulan_awal') || !request('bulan_akhir')) disabled @endif style="height: 38px;">
+                            <i class="fa fa-download me-2"></i> Download PDF
+                        </button>
+                    </form>
                 </div>
             </div>
-        </form>
+        </div>
 
         {{-- Penilaian Masyarakat --}}
         <div class="row">
@@ -417,6 +430,31 @@
             createChart(ctxAsn, topAsnData, "Top Penilaian ASN");
             createChart(ctxNonAsn, topNonAsnData, "Top Penilaian Non ASN");
         });
+    </script>
+
+    <script>
+        // Fungsi untuk mengecek status tombol download
+        function checkDownloadButton() {
+            const bulanAwal = document.getElementById('bulan_awal').value;
+            const bulanAkhir = document.getElementById('bulan_akhir').value;
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            if (bulanAwal && bulanAkhir) {
+                downloadBtn.disabled = false;
+                // Update nilai hidden input
+                document.querySelector('input[name="bulan_awal"]').value = bulanAwal;
+                document.querySelector('input[name="bulan_akhir"]').value = bulanAkhir;
+            } else {
+                downloadBtn.disabled = true;
+            }
+        }
+
+        // Event listener untuk perubahan select
+        document.getElementById('bulan_awal').addEventListener('change', checkDownloadButton);
+        document.getElementById('bulan_akhir').addEventListener('change', checkDownloadButton);
+
+        // Jalankan saat pertama kali load
+        document.addEventListener('DOMContentLoaded', checkDownloadButton);
     </script>
 
 @endsection
