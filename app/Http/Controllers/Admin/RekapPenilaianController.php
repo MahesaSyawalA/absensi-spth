@@ -19,9 +19,12 @@ class RekapPenilaianController extends Controller
         // Ambil bulan dari request
         $bulanAwal = $request->input('bulan_awal');
         $bulanAkhir = $request->input('bulan_akhir');
+        // Ambil tahun berjalan
+        $tahunSekarang = date('Y');
+        // dd($tahunSekarang);
 
         // penilaian akhir
-        $penilaianAkhirQuery = RekapanNilaiAkhir::with('user');
+        $penilaianAkhirQuery = RekapanNilaiAkhir::with('user')->where('tahun', $tahunSekarang);
 
         if ($bulanAwal && $bulanAkhir) {
             $penilaianAkhirQuery->whereBetween('bulan', [$bulanAwal, $bulanAkhir]);
@@ -30,7 +33,7 @@ class RekapPenilaianController extends Controller
         $penilaianAkhir = $penilaianAkhirQuery->orderByDesc('nilai_akhir')->get();
         // end penilian akhir
 
-        $topEmployeesAttendanceQuery = RekapanAbsensiBulanan::with('user');
+        $topEmployeesAttendanceQuery = RekapanAbsensiBulanan::with('user')->where('tahun', $tahunSekarang);
 
         if ($bulanAwal && $bulanAkhir) {
             $topEmployeesAttendanceQuery->whereBetween('bulan', [$bulanAwal, $bulanAkhir]);
@@ -66,7 +69,7 @@ class RekapPenilaianController extends Controller
             ->get();
 
 
-        $rekapanQuery = RekapanPenilaianBulanan::with('user:id,nama');
+        $rekapanQuery = RekapanPenilaianBulanan::with('user:id,nama')->where('tahun', $tahunSekarang);
 
         if ($bulanAwal && $bulanAkhir) {
             $rekapanQuery->whereBetween('bulan', [$bulanAwal, $bulanAkhir]);
@@ -89,7 +92,7 @@ class RekapPenilaianController extends Controller
                 ];
             });
 
-        $rekapPenilaianKhususQuery = PenilaianKhusus::with(['user', 'penilai']);
+        $rekapPenilaianKhususQuery = PenilaianKhusus::with(['user', 'penilai'])->where('tahun', $tahunSekarang);
 
         if ($bulanAwal && $bulanAkhir) {
             $rekapPenilaianKhususQuery->whereBetween('bulan', [$bulanAwal, $bulanAkhir]);
@@ -115,7 +118,7 @@ class RekapPenilaianController extends Controller
             })
             ->sortByDesc('nilai_akhir')
             ->take(1); // Ambil 10 besar
-            // dd($topNonAsn);
+        // dd($topNonAsn);
 
 
         $data = [
