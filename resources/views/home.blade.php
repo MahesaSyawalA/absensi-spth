@@ -57,6 +57,41 @@
             max-width: 50px;
         }
 
+        /* CSS untuk chart dan foto */
+        .staff-photo {
+            width: 400px;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            display: block;
+        }
+
+        .default-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f5f5;
+            border: 3px dashed #ccc;
+            color: #999;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .no-data-message {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+
         /* Jika Anda ingin menambahkan breakpoint untuk layar besar (lg) */
         @media (min-width: 992px) {
             .max-w-lg-150 {
@@ -100,13 +135,9 @@
                 </a>
             </div>
             <ul class="d-flex ">
-                <li class="px-3 py-2 rounded">
-                    <a href="#formPenilaian" id="scrollToForm">Berikan Penilaian</a>
-                </li>
                 <li class="bg-primary px-3 py-2 rounded">
                     <a href="/login" style="color: white; ">Login</a>
                 </li>
-
             </ul>
         </div>
         <!-- Page Header Ends-->
@@ -133,62 +164,62 @@
                             <div class="card-header">
                                 <h5>Top Penilaian Pegawai ASN</h5>
                             </div>
-                            <div class="card-body chart-block">
-                                <canvas id="graphTopPenilaianAsn"></canvas>
+                            <div class="card-body text-center">
+                                @if(isset($topAsn) && count($topAsn) > 0 && $topAsn[0]['foto'])
+                                    <img class="staff-photo" src="{{ asset($topAsn[0]['foto']) }}" alt="Foto Staff">
+                                @else
+                                    <div class="default-photo">
+                                        <span>Tidak ada foto</span>
+                                    </div>
+                                @endif
+
+                                <div class="chart-container">
+                                    @if(isset($topAsn) && count($topAsn) > 0)
+                                        <canvas id="graphTopPenilaianAsn"></canvas>
+                                    @else
+                                        <div class="no-data-message">
+                                            Belum ada data penilaian untuk pegawai ASN
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-xl-6 col-md-12 box-col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Top Penilian Pegawai Non ASN</h5>
+                                <h5>Top Penilaian Pegawai Non ASN</h5>
                             </div>
-                            <div class="card-body chart-block">
-                                <canvas id="graphTopPenilaianNonAsn"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card" id="listStaff">
-                    <div class="container mt-5">
-                        <h1 class="text-center mb-4">Daftar Staff</h1>
-
-                        <div class="row">
-                            @foreach ($staffs as $staff)
-                                <div class="col-md-6 col-lg-4 mb-4 d-flex align-items-stretch">
-                                    <div class="card w-100">
-                                        <!-- Foto Staff -->
-                                        <img src="{{ asset($staff->foto) }}" class="card-img-top"
-                                            alt="{{ $staff->nama }}" style="height: 430px; object-fit: contain;">
-
-                                        <div class="card-body d-flex flex-column">
-                                            <!-- Nama Staff -->
-                                            <h5 class="card-title">{{ $staff->nama }}</h5>
-
-                                            <!-- Jabatan -->
-                                            <p class="card-text">
-                                                <strong>Jabatan:</strong> {{ $staff->jabatan }}
-                                            </p>
-
-                                            <!-- Email -->
-                                            <p class="card-text">
-                                                <strong>Email:</strong> {{ $staff->email }}
-                                            </p>
-                                            <div class="container d-flex justify-content-end">
-
-                                                <a href="{{ route('index.penilaian', ['slug' => $staff->slug]) }}"
-                                                    class="btn btn-primary mt-auto">Berikan Penilaian</a>
-                                            </div>
-                                        </div>
+                            <div class="card-body text-center">
+                                @if(isset($topNonAsn) && count($topNonAsn) > 0 && $topNonAsn[0]['foto'])
+                                    <img class="staff-photo" src="{{ asset($topNonAsn[0]['foto']) }}" alt="Foto Staff">
+                                @else
+                                    <div class="default-photo">
+                                        <span>Tidak ada foto</span>
                                     </div>
-                                </div>
-                            @endforeach
-                        </div>
+                                @endif
 
+                                <div class="chart-container">
+                                    @if(isset($topNonAsn) && count($topNonAsn) > 0)
+                                        <canvas id="graphTopPenilaianNonAsn"></canvas>
+                                    @else
+                                        <div class="no-data-message">
+                                            Belum ada data penilaian untuk pegawai Non ASN
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- Container-fluid body Ends-->
+
+                <div class="card container-fluid">
+                    <div class="card-body d-flex justify-content-center">
+                        <h1 class="text-center">
+                            Terima Kasih Telah Melakukan Penilaian Pegawai Kami, Jawaban Anda Membantu Kami Dalam Meningkatkan Pelayanan Yang Lebih Baik Lagi
+                        </h1>
+                    </div>
+                </div>
             </div>
             <!-- footer start-->
             <footer class="footer">
@@ -207,13 +238,12 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("scrollToForm").addEventListener("click", function(event) {
-                event.preventDefault(); // Mencegah perubahan halaman
-
+                event.preventDefault();
                 const target = document.getElementById("listStaff");
                 if (target) {
                     target.scrollIntoView({
-                        behavior: "smooth", // Scroll halus
-                        block: "start" // Fokus ke bagian atas elemen
+                        behavior: "smooth",
+                        block: "start"
                     });
                 }
             });
@@ -221,65 +251,83 @@
     </script>
 
     <script>
-        var topAsnData = @json($topAsn);
-        var topNonAsnData = @json($topNonAsn);
+        var topAsnData = @json($topAsn ?? []);
+        var topNonAsnData = @json($topNonAsn ?? []);
 
         document.addEventListener("DOMContentLoaded", function () {
-            var ctxAsn = document.getElementById("graphTopPenilaianAsn")?.getContext("2d");
-            var ctxNonAsn = document.getElementById("graphTopPenilaianNonAsn")?.getContext("2d");
+            // Fungsi untuk membuat chart dengan penanganan error
+            function initChart(selector, data, title) {
+                const ctx = document.getElementById(selector);
+                if (!ctx) return;
 
-            if (!ctxAsn || !ctxNonAsn) {
-                console.error("Canvas tidak ditemukan!");
-                return;
-            }
+                // Jika tidak ada data, tampilkan pesan
+                if (!data || data.length === 0) {
+                    ctx.style.display = 'none';
+                    return;
+                }
 
-            // Konversi objek menjadi array
-            var topAsnArray = Object.values(topAsnData);
-            var topNonAsnArray = Object.values(topNonAsnData);
-
-            function createChart(ctx, data, label) {
-                new Chart(ctx, { // Gunakan ctx langsung
-                    type: "bar",
-                    data: {
-                        labels: data.map(item => item.nama),
-                        datasets: [{
-                            label: label,
-                            backgroundColor: "#7366FF",
-                            borderColor: "#7366FF",
-                            data: data.map(item => item.total_avg),
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function (tooltipItem) {
-                                        var index = tooltipItem.dataIndex;
-                                        var totalAvg = data[index].total_avg;
-                                        var totalPenilaian = data[index].total_penilaian;
-
-                                        return [
-                                            `Total Rata-rata: ${totalAvg.toFixed(2)}`,
-                                            `Total Penilaian: ${totalPenilaian}`
-                                        ];
+                try {
+                    new Chart(ctx.getContext("2d"), {
+                        type: 'bar',
+                        data: {
+                            labels: [data[0].nama || 'Pegawai'],
+                            datasets: [{
+                                label: title,
+                                data: [data[0].total_avg || 0],
+                                backgroundColor: '#7366FF',
+                                borderColor: '#7366FF',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const dataItem = data[context.dataIndex];
+                                            return [
+                                                `Nilai Rata-rata: ${(dataItem.total_avg || 0).toFixed(2)}`,
+                                                `Total Penilaian: ${dataItem.total_penilaian || 0}`
+                                            ];
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 10,
+                                    title: {
+                                        display: true,
+                                        text: 'Nilai'
+                                    }
+                                },
+                                x: {
+                                    grid: {
+                                        display: false
                                     }
                                 }
                             }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
                         }
-                    }
-                });
+                    });
+                } catch (error) {
+                    console.error('Error initializing chart:', error);
+                    ctx.style.display = 'none';
+                }
             }
 
-            // Panggil fungsi dengan data yang sudah dikonversi
-            createChart(ctxAsn, topAsnArray, "Top Penilaian ASN");
-            createChart(ctxNonAsn, topNonAsnArray, "Top Penilaian Non ASN");
+            // Inisialisasi chart dengan penanganan error
+            try {
+                initChart('graphTopPenilaianAsn', Array.isArray(topAsnData) ? topAsnData : [], 'Top ASN');
+                initChart('graphTopPenilaianNonAsn', Array.isArray(topNonAsnData) ? topNonAsnData : [], 'Top Non ASN');
+            } catch (error) {
+                console.error('Error loading chart data:', error);
+            }
         });
     </script>
 
@@ -309,14 +357,12 @@
     <script src="../assets/js/typeahead/typeahead.custom.js"></script>
     <script src="../assets/js/typeahead-search/handlebars.js"></script>
     <script src="../assets/js/typeahead-search/typeahead-custom.js"></script>
-    {{-- <script src="../assets/js/chart/chartjs/chart.min.js"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../assets/js/chart/chartjs/chart.custom.js"></script>
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
     <script src="../assets/js/script.js"></script>
     <script src="../assets/js/script1.js"></script>
-    {{-- <script src="../assets/js/theme-customizer/customizer.js"></script> --}}
 </body>
 
 </html>
