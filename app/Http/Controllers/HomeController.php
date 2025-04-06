@@ -16,6 +16,7 @@ class HomeController extends Controller
 {
     public function index()
     {
+
         $topAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai,foto')
             ->whereHas('user', function ($query) {
                 $query->where('status_pegawai', 'ASN');

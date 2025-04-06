@@ -14,7 +14,101 @@
 
 @section('content')
     <div>
+        <form action="{{ route('admin.index') }}" method="GET">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="row">
+                            <div class="col">
+                                <label class="form-label">Bulan Awal</label>
+                                <select class="form-select" name="bulan_awal" required>
+                                    <option selected disabled value="">Pilih</option>
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Bulan Akhir</label>
+                                <select class="form-select" name="bulan_akhir" required>
+                                    <option selected disabled value="">Pilih</option>
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="col d-flex align-items-end pb-1">
+                                <button class="btn btn-primary w-100" type="submit">Filter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        {{-- Penilaian Masyarakat --}}
         <div class="row">
+            <div class="col-xl-6 col-md-12 box-col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Top Pegawai ASN </h5>
+                    </div>
+                    <div class="card-body chart-block">
+                        <canvas id="graphTopPenilaianAsn"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-md-12 box-col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Top Pegawai Non ASN</h5>
+                    </div>
+                    <div class="card-body chart-block">
+                        <canvas id="graphTopPenilaianNonAsn"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- rekapan Penilaian Akhir --}}
+        <div class="card">
+            <div class="card-header pb-0 card-no-border">
+                <h5>Table Data Rekapan Nilai Akhir</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive custom-scrollbar">
+                    <table class="display table-striped border" id="rekapPenilaianAkhir">
+                        <thead>
+                            <tr>
+                                <th>Pegawai</th>
+                                <th>Bulan</th>
+                                <th>Tahun</th>
+                                <th>Total Point Absensi</th>
+                                <th>Rata-Rata Penilaian Masyarakat</th>
+                                <th>Rata-Rata Penilaian Penilai</th>
+                                <th>Nilai Akhir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($penilaianAkhir as $data)
+                                <tr>
+                                    <td>{{ $data['user']['nama'] }}</td> <!-- Menampilkan Nama -->
+                                    <td>{{ $data['bulan'] }}</td>
+                                    <td>{{ $data['tahun'] }}</td>
+                                    <td>{{ number_format($data['nilai_absensi'], 2) }}</td>
+                                    <td>{{ number_format($data['nilai_masyarakat'], 2) }}</td>
+                                    <td>{{ number_format($data['nilai_penilai'], 2) }}</td>
+                                    <td>{{ number_format($data['nilai_akhir'], 2) }}</td>
+                                </tr>
+                            @endforeach
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {{-- <div class="row">
             <div class="col-xl-6 col-md-12 box-col-12">
                 <div class="card">
                     <div class="card-header">
@@ -35,36 +129,46 @@
                     </div>
                 </div>
             </div>
+        </div> --}}
+
+        <div class="card">
+            <div class="card-header pb-0 card-no-border">
+                <h5>Table Data Absensi Pegawai</h5>
+            </div>
+
+            {{-- {{dd($topEmployeesAttendance)}} --}}
+            <div class="card-body">
+                <div class="table-responsive custom-scrollbar">
+                    <table class="display table-striped border" id="basic-1">
+                        <thead>
+                            <tr>
+                                <th>Peringkat</th>
+                                <th>Nama Pegawai</th>
+                                <th>Total Absensi</th>
+                                <th>Total Point Absensi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($topEmployeesAttendance as $index => $pegawai)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $pegawai->user->nama }}</td>
+                                    <td>{{ $pegawai->total_absen }}</td>
+                                    <td>{{ $pegawai->total_poin }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
+        {{-- Penilaian Masyarakat --}}
         {{-- <div class="row">
             <div class="col-xl-6 col-md-12 box-col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Pegawai ASN</h5>
-                    </div>
-                    <div class="card-body chart-block">
-                        <canvas id="myBarGraph"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-6 col-md-12 box-col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Pegawai Non ASN</h5>
-                    </div>
-                    <div class="card-body chart-block">
-                        <canvas id="myBarGraph2"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-
-        <div class="row">
-            <div class="col-xl-6 col-md-12 box-col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Top Penilaian Pegawai ASN</h5>
+                        <h5>Top Penilaian Pegawai ASN dari Masyarakat</h5>
                     </div>
                     <div class="card-body chart-block">
                         <canvas id="graphTopPenilaianAsn"></canvas>
@@ -74,46 +178,18 @@
             <div class="col-xl-6 col-md-12 box-col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Top Penilian Pegawai Non ASN</h5>
+                        <h5>Top Penilian Pegawai Non ASN dari Masyarakat</h5>
                     </div>
                     <div class="card-body chart-block">
                         <canvas id="graphTopPenilaianNonAsn"></canvas>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="card">
             <div class="card-header pb-0 card-no-border">
-                <h5>Table Data Absensi Pegawai</h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive custom-scrollbar">
-                    <table class="display table-striped border" id="basic-1">
-                        <thead>
-                            <tr>
-                                <th>Peringkat</th>
-                                <th>Nama Pegawai</th>
-                                <th>Total Absensi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($top_pegawai as $index => $pegawai)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $pegawai->nama }}</td>
-                                    <td>{{ $pegawai->total_scans }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header pb-0 card-no-border">
-                <h5>Table Data Absensi Pegawai</h5>
+                <h5>Table Data Penilaian Masyarakat</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive custom-scrollbar">
@@ -149,6 +225,45 @@
                 </div>
             </div>
         </div>
+
+        <div class="card">
+            <div class="card-header pb-0 card-no-border">
+                <h5>Table Data Penilaian Penilai</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive custom-scrollbar">
+                    <table class="display table-striped border" id="tableRekapPenilaianKhusus">
+                        <thead>
+                            <tr>
+                                <th>Penilai</th>
+                                <th>Pegawai</th>
+                                <th>Bulan</th>
+                                <th>Tahun</th>
+                                <th>Perilaku</th>
+                                <th>Penampilan</th>
+                                <th>Kecepatan</th>
+                                <th>Ketepatan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($rekapPenilaianKhusus as $data)
+                                <tr>
+                                    <td>{{ $data['penilai']['nama'] }}</td> <!-- Menampilkan Nama -->
+                                    <td>{{ $data['user']['nama'] }}</td> <!-- Menampilkan Nama -->
+                                    <td>{{ $data['bulan'] }}</td>
+                                    <td>{{ $data['tahun'] }}</td>
+                                    <td>{{ number_format($data['perilaku_petugas'], 2) }}</td>
+                                    <td>{{ number_format($data['penampilan'], 2) }}</td>
+                                    <td>{{ number_format($data['kecepatan_pelayanan'], 2) }}</td>
+                                    <td>{{ number_format($data['ketepatan_transparansi'], 2) }}</td>
+                                </tr>
+                            @endforeach
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -157,17 +272,19 @@
         var top1_asn = @json($top1_asn);
         var top1_nonasn = @json($top1_nonasn);
 
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+            "November", "December"
+        ];
         console.log(top1_nonasn);
 
-        const namaTop1AbsensiASN = top1_asn.map(item => item.nama);
-        const namaTop1AbsensiNonASN = top1_nonasn.map(item => item.nama);
+        const namaTop1AbsensiASN = top1_asn.map(item => item.user.nama);
+        const namaTop1AbsensiNonASN = top1_nonasn.map(item => item.user.nama);
 
-        const labelTop1ASN = top1_asn.map(item => months[item.month - 1]);
-        const labelTop1NonASN = top1_nonasn.map(item => months[item.month - 1]);
+        const labelTop1ASN = top1_asn.map(item => months[item.bulan - 1]);
+        const labelTop1NonASN = top1_nonasn.map(item => months[item.bulan - 1]);
 
-        const jumlahAbsensiTop1ASN = top1_asn.map(item => item.total_scans);
-        const jumlahAbsensiTop1NonASN = top1_nonasn.map(item => item.total_scans);
+        const jumlahAbsensiTop1ASN = top1_asn.map(item => item.total_poin);
+        const jumlahAbsensiTop1NonASN = top1_nonasn.map(item => item.total_poin);
 
         function getLastThreeMonths() {
             const months = [];
@@ -191,8 +308,8 @@
             data: {
                 labels: labelTop1ASN,
                 datasets: [{
-                    label: 'Jumlah absensi',
-                    data: jumlahAbsensiTop1ASN ?? [0,0,0],
+                    label: 'Total Poin absensi',
+                    data: jumlahAbsensiTop1ASN ?? [0, 0, 0],
                     borderWidth: 1
                 }]
             },
@@ -254,12 +371,12 @@
                 new Chart(ctx.getContext("2d"), {
                     type: "bar",
                     data: {
-                        labels: data.map(item => item.nama),
+                        labels: data.map(item => item?.user?.nama),
                         datasets: [{
                             label: label,
                             backgroundColor: "#7366FF",
                             borderColor: "#7366FF",
-                            data: data.map(item => item.total_avg),
+                            data: data.map(item => item?.nilai_akhir),
                         }]
                     },
                     options: {
@@ -271,12 +388,18 @@
                                     label: function(tooltipItem) {
                                         var dataset = tooltipItem.dataset;
                                         var index = tooltipItem.dataIndex;
-                                        var totalAvg = dataset.data[index];
-                                        var totalPenilaian = data[index].total_penilaian;
+                                        // var totalAvg = dataset.data[index];
+                                        var totalPenilaian = data[index].nilai_akhir;
+                                        var nilaiMasyarakat = data[index].nilai_masyarakat;
+                                        var nilaiPenilai = data[index].nilai_penilai;
+                                        var nilaiAbsensi = data[index].nilai_absensi;
 
                                         return [
-                                            `Total Rata-rata: ${totalAvg.toFixed(2)}`,
-                                            `Total Penilaian: ${totalPenilaian}`
+                                            // `Total Rata-rata: ${totalAvg.toFixed(2)}`,
+                                            `Total Penilaian Akhir: ${totalPenilaian}`,
+                                            `Rata-rata Penilaian Masyarakat: ${nilaiMasyarakat}`,
+                                            `Rata-rata Penilaian Penilai: ${nilaiPenilai}`,
+                                            `Total Score Absensi: ${nilaiAbsensi}`,
                                         ];
                                     }
                                 }
