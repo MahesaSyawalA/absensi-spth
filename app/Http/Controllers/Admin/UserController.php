@@ -45,6 +45,8 @@ class UserController extends Controller
         }
         file_put_contents($path, $qr_pegawai);
 
+        $qr_path = 'images/qr/' . $slug_pegawai . '.png';
+
         // Validasi data
         $request->validate([
             'nip' => 'required|unique:users,nip|regex:/^[a-zA-Z0-9]+$/',
@@ -54,6 +56,7 @@ class UserController extends Controller
             'status_pegawai' => 'required|string|in:ASN,Non ASN',
             'jenis_kelamin' => 'required|string|in:Laki laki,Perempuan',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'barcode' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'role' => 'required|string|in:superadmin,admin,pegawai',
 
             'username' => 'required|string|unique:users,username|regex:/^[a-zA-Z0-9]+$/|min:4',
@@ -82,14 +85,14 @@ class UserController extends Controller
         ]);
 
         // inisialisasi variabel fotoPath biar nggak error kalau gaada foto pegawai
-        $fotoPath = '';
+        $foto_path = '';
 
         // Simpan foto jika ada
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('images/profile_pictures'), $filename);
-            $fotoPath = 'images/profile_pictures/' . $filename;
+            $foto_path = 'images/profile_pictures/' . $filename;
         }
         // Simpan data ke database
         $user = User::create([
@@ -102,7 +105,8 @@ class UserController extends Controller
             'tanggal_lahir' => $request->tanggal_lahir,
             'status_pegawai' => $request->status_pegawai,
             'jenis_kelamin' => $request->jenis_kelamin,
-            'foto' => $fotoPath,
+            'foto' => $foto_path,
+            'barcode' => $qr_path,
             'role' => $request->role,
         ]);
 

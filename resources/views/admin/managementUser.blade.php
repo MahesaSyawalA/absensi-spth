@@ -53,7 +53,7 @@
                         </thead>
                         <tbody>
                             @foreach ($users as $u)
-                            <tr>
+                                <tr>
                                     <td>{{ $u->username }}</td>
                                     <td>{{ $u->nip }}</td>
                                     <td>{{ $u->nama }}</td>
@@ -61,8 +61,20 @@
                                     <td>{{ $u->tanggal_lahir }}</td>
                                     <td>{{ $u->status_pegawai }}</td>
                                     <td>{{ $u->jenis_kelamin }}</td>
-                                    <td>{{ $u->foto }}</td>
-                                    <td>{{ $u->barcode }}</td>
+                                    <td>
+                                        @if ($u->foto != null)
+                                            <img width="100px" src="{{ asset($u->foto) }}" alt="Photo">
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($u->barcode != null)
+                                            <img width="100px" src="{{ asset($u->barcode) }}" alt="Photo">
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
                                     <td>{{ ucfirst(trans($u->role)) }}</td>
                                     <td>
                                         <ul class="action">
