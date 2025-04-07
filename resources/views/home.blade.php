@@ -162,7 +162,7 @@
                     <div class="col-xl-6 col-md-12 box-col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Top Penilaian Pegawai ASN</h5>
+                                <h5>Top Nilai Pegawai ASN</h5>
                             </div>
                             <div class="card-body text-center">
                                 @if(isset($topAsn) && count($topAsn) > 0 && $topAsn[0]['foto'])
@@ -188,7 +188,7 @@
                     <div class="col-xl-6 col-md-12 box-col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Top Penilaian Pegawai Non ASN</h5>
+                                <h5>Top Nilai Pegawai Non ASN</h5>
                             </div>
                             <div class="card-body text-center">
                                 @if(isset($topNonAsn) && count($topNonAsn) > 0 && $topNonAsn[0]['foto'])
