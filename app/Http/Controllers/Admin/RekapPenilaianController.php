@@ -16,60 +16,69 @@ class RekapPenilaianController extends Controller
 
     public function index(Request $request)
     {
-        // Ambil bulan dari request
+        // Inisialisasi tahun sekarang
+        $tahunSekarang = date('Y');
+
+        // Ambil bulan dari request dengan default null
         $bulanAwal = $request->input('bulan_awal');
         $bulanAkhir = $request->input('bulan_akhir');
-        // Ambil tahun berjalan
-        $tahunSekarang = date('Y');
-        // dd($tahunSekarang);
 
-        // penilaian akhir
-        $penilaianAkhirQuery = RekapanNilaiAkhir::with('user')->where('tahun', $tahunSekarang);
+        // Query untuk penilaian akhir dengan default empty collection
+        $penilaianAkhirQuery = RekapanNilaiAkhir::with(['user' => function ($query) {
+            $query->select('id', 'nama', 'status_pegawai');
+        }])->where('tahun', $tahunSekarang);
 
         if ($bulanAwal && $bulanAkhir) {
             $penilaianAkhirQuery->whereBetween('bulan', [$bulanAwal, $bulanAkhir]);
         }
 
-        $penilaianAkhir = $penilaianAkhirQuery->orderByDesc('nilai_akhir')->get();
-        // end penilian akhir
+        $penilaianAkhir = $penilaianAkhirQuery->orderByDesc('nilai_akhir')->get() ?? collect();
 
-        $topEmployeesAttendanceQuery = RekapanAbsensiBulanan::with('user')->where('tahun', $tahunSekarang);
+        // Query untuk absensi dengan default empty collection
+        $topEmployeesAttendanceQuery = RekapanAbsensiBulanan::with(['user' => function ($query) {
+            $query->select('id', 'nama');
+        }])->where('tahun', $tahunSekarang);
 
         if ($bulanAwal && $bulanAkhir) {
             $topEmployeesAttendanceQuery->whereBetween('bulan', [$bulanAwal, $bulanAkhir]);
         }
 
-        $topEmployeesAttendance = $topEmployeesAttendanceQuery->orderByDesc('total_poin')->get();
+        $topEmployeesAttendance = $topEmployeesAttendanceQuery->orderByDesc('total_poin')->get() ?? collect();
 
-
+        // Query untuk top employees dengan default empty collection
         $topEmployees = DB::table('absensi as a')
             ->join('users as u', 'a.user_id', '=', 'u.id')
             ->select('u.nama', DB::raw('COUNT(a.id) as total_scans'))
             ->groupBy('u.nama')
             ->orderByDesc('total_scans')
-            ->get();
+            ->get() ?? collect();
 
-
-        // ASN
+        // Query untuk top ASN dengan default empty collection
         $top1ASNEmployeeAttendance = RekapanAbsensiBulanan::whereHas('user', function ($query) {
             $query->where('status_pegawai', 'ASN');
         })
-            ->with('user')
+            ->with(['user' => function ($query) {
+                $query->select('id', 'nama');
+            }])
             ->orderByDesc('total_poin')
             ->limit(1)
-            ->get();
+            ->get() ?? collect();
 
-        // Non ASN
+        // Query untuk top Non ASN dengan default empty collection
         $top1NonASNEmployeeAttendance = RekapanAbsensiBulanan::whereHas('user', function ($query) {
             $query->where('status_pegawai', 'Non ASN');
         })
-            ->with('user')
+            ->with(['user' => function ($query) {
+                $query->select('id', 'nama');
+            }])
             ->orderByDesc('total_poin')
             ->limit(1)
-            ->get();
+            ->get() ?? collect();
 
-
-        $rekapanQuery = RekapanPenilaianBulanan::with('user:id,nama')->where('tahun', $tahunSekarang);
+        // Query untuk rekapan penilaian dengan default empty collection
+        $rekapanQuery = RekapanPenilaianBulanan::with(['user' => function ($query) {
+            $query->select('id', 'nama');
+        }])->where('tahun', $tahunSekarang);
 
         if ($bulanAwal && $bulanAkhir) {
             $rekapanQuery->whereBetween('bulan', [$bulanAwal, $bulanAkhir]);
@@ -81,18 +90,26 @@ class RekapPenilaianController extends Controller
             ->get()
             ->map(function ($item) {
                 return [
-                    'nama' => $item->user->nama,
-                    'bulan' => $item->bulan,
-                    'tahun' => $item->tahun,
-                    'total_penilaian' => $item->total_penilaian,
-                    'avg_perilaku_petugas' => $item->avg_perilaku_petugas,
-                    'avg_penampilan' => $item->avg_penampilan,
-                    'avg_kecepatan_pelayanan' => $item->avg_kecepatan_pelayanan,
-                    'avg_ketepatan_transparansi' => $item->avg_ketepatan_transparansi,
+                    'nama' => optional($item->user)->nama ?? 'N/A',
+                    'bulan' => $item->bulan ?? 'N/A',
+                    'tahun' => $item->tahun ?? 'N/A',
+                    'total_penilaian' => $item->total_penilaian ?? 0,
+                    'avg_perilaku_petugas' => $item->avg_perilaku_petugas ?? 0,
+                    'avg_penampilan' => $item->avg_penampilan ?? 0,
+                    'avg_kecepatan_pelayanan' => $item->avg_kecepatan_pelayanan ?? 0,
+                    'avg_ketepatan_transparansi' => $item->avg_ketepatan_transparansi ?? 0,
                 ];
-            });
+            }) ?? collect();
 
-        $rekapPenilaianKhususQuery = PenilaianKhusus::with(['user', 'penilai'])->where('tahun', $tahunSekarang);
+        // Query untuk penilaian khusus dengan default empty collection
+        $rekapPenilaianKhususQuery = PenilaianKhusus::with([
+            'user' => function ($query) {
+                $query->select('id', 'nama');
+            },
+            'penilai' => function ($query) {
+                $query->select('id', 'nama');
+            }
+        ])->where('tahun', $tahunSekarang);
 
         if ($bulanAwal && $bulanAkhir) {
             $rekapPenilaianKhususQuery->whereBetween('bulan', [$bulanAwal, $bulanAkhir]);
@@ -100,28 +117,42 @@ class RekapPenilaianController extends Controller
 
         $rekapPenilaianKhusus = $rekapPenilaianKhususQuery
             ->orderByDesc(DB::raw('perilaku_petugas + penampilan + kecepatan_pelayanan + ketepatan_transparansi'))
-            ->get();
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'penilai' => [
+                        'nama' => optional($item->penilai)->nama ?? 'N/A'
+                    ],
+                    'user' => [
+                        'nama' => optional($item->user)->nama ?? 'N/A'
+                    ],
+                    'bulan' => $item->bulan ?? 'N/A',
+                    'tahun' => $item->tahun ?? 'N/A',
+                    'perilaku_petugas' => $item->perilaku_petugas ?? 0,
+                    'penampilan' => $item->penampilan ?? 0,
+                    'kecepatan_pelayanan' => $item->kecepatan_pelayanan ?? 0,
+                    'ketepatan_transparansi' => $item->ketepatan_transparansi ?? 0,
+                ];
+            }) ?? collect();
 
-
-        // dd($rekapPenilaianKhususQuery);
-
+        // Filter untuk top ASN dan Non ASN
         $topAsn = $penilaianAkhir
             ->filter(function ($item) {
-                return $item->user && $item->user->status_pegawai === 'ASN';
+                return optional($item->user)->status_pegawai === 'ASN';
             })
             ->sortByDesc('nilai_akhir')
-            ->take(1);
+            ->take(1)
+            ->values() ?? collect();
 
         $topNonAsn = $penilaianAkhir
             ->filter(function ($item) {
-                return $item->user && $item->user->status_pegawai === 'Non ASN';
+                return optional($item->user)->status_pegawai === 'Non ASN';
             })
             ->sortByDesc('nilai_akhir')
-            ->take(1); // Ambil 10 besar
-        // dd($topNonAsn);
+            ->take(1)
+            ->values() ?? collect();
 
-
-        $data = [
+        return view('admin.rekapPenilaian', [
             'title' => 'Rekap Penilaian',
             'topEmployeesAttendance' => $topEmployeesAttendance,
             'top_pegawai' => $topEmployees,
@@ -129,10 +160,9 @@ class RekapPenilaianController extends Controller
             'top1_nonasn' => $top1NonASNEmployeeAttendance,
             'rekapan' => $rekapan,
             'topAsn' => $topAsn,
-            'topNonAsn' => $topNonAsn->values(),
-            'penilaianAkhir' => $penilaianAkhir->values(),
+            'topNonAsn' => $topNonAsn,
+            'penilaianAkhir' => $penilaianAkhir,
             'rekapPenilaianKhusus' => $rekapPenilaianKhusus,
-        ];
-        return view('admin.rekapPenilaian', $data);
+        ]);
     }
 }

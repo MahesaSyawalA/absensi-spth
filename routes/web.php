@@ -52,6 +52,6 @@ Route::middleware(['auth', 'is_pegawai'])->group(function () {
     Route::get('/staff/profile', [ProfileController::class, 'index']);
 });
 
-Route::get('/penilai',[PenilaiController::class,'index'])->middleware('is_penilai');
+Route::get('/penilai',[PenilaiController::class,'index'])->middleware('is_penilai')->name('penilai.index');
 Route::get('/print',[HomeController::class,'print'])->name('print-rekap-penilaian');
 
