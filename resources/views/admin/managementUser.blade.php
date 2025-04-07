@@ -134,7 +134,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="tanggal_lahir">Tanggal Lahir</label>
-                                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" required>
+                                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir"
+                                    required>
                             </div>
                             <div class="form-group">
                                 <label for="status_pegawai">Status</label>
@@ -159,6 +160,7 @@
                                 <select class="form-control" id="role" name="role" required>
                                     <option value="superadmin">Super Admin</option>
                                     <option value="admin">Admin</option>
+                                    <option value="penilai">Penilai</option>
                                     <option value="pegawai">Pegawai</option>
                                 </select>
                             </div>
@@ -185,11 +187,13 @@
                 <div class="modal-body">
                     <form id="editUserForm">
                         <div class="form-group mb-2">
-                            <label for="username" class="d-flex justify-content-between">Username <span>isi jika ingin mengubah</span></label>
+                            <label for="username" class="d-flex justify-content-between">Username <span>isi jika ingin
+                                    mengubah</span></label>
                             <input type="text" class="form-control" id="editUsername" name="username" required>
                         </div>
                         <div class="form-group mb-2">
-                            <label for="password" class="d-flex justify-content-between">Password <span>Isi jika ingin mengubah</span></label>
+                            <label for="password" class="d-flex justify-content-between">Password <span>Isi jika ingin
+                                    mengubah</span></label>
                             <input type="text" class="form-control" id="password" name="password" required>
                         </div>
                         <div class="form-group mb-2">
@@ -224,7 +228,8 @@
                             </select>
                         </div>
                         <div class="form-group mb-2">
-                            <label for="editFoto" class="d-flex justify-content-between">Foto <span>isi jika ingin mengubah</span></label>
+                            <label for="editFoto" class="d-flex justify-content-between">Foto <span>isi jika ingin
+                                    mengubah</span></label>
                             <input type="file" class="form-control" id="editFoto" name="foto">
                         </div>
                         <div class="form-group mb-2">
@@ -232,6 +237,7 @@
                             <select class="form-control" id="editRole" name="role" required>
                                 <option value="superadmin">Super Admin</option>
                                 <option value="admin">Admin</option>
+                                <option value="penilai">Penilai</option>
                                 <option value="pegawai">Pegawai</option>
                             </select>
                         </div>
