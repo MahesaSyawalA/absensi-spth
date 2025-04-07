@@ -159,6 +159,7 @@
                                 <select class="form-control text-white" id="role" name="role" required>
                                     <option value="superadmin">Super Admin</option>
                                     <option value="admin">Admin</option>
+                                    <option value="penilai">Penilai</option>
                                     <option value="pegawai">Pegawai</option>
                                 </select>
                             </div>
@@ -232,6 +233,7 @@
                             <select class="form-control text-white" id="editRole" name="role" required>
                                 <option value="superadmin">Super Admin</option>
                                 <option value="admin">Admin</option>
+                                <option value="penilai">Penilai</option>
                                 <option value="pegawai">Pegawai</option>
                             </select>
                         </div>

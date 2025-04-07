@@ -27,7 +27,23 @@ class AuthSessionController extends Controller
     // Menampilkan halaman login
     public function index()
     {
-        return view('auth.login');
+        $user = Auth::user();
+
+    // Cek jika sudah login
+    if ($user) {
+        // Arahkan sesuai role
+        if ($user->role === 'penilai') {
+            return redirect()->route('penilai.index');
+        } elseif ($user->role === 'admin' || $user->role === 'superadmin' ) {
+            return  redirect()->route('admin.profile');
+        } elseif ($user->role === 'pegawai') {
+            return  redirect()->route('staff.index');
+        }
+        // Tambahkan role lain kalau ada
+    }
+
+    // Kalau belum login, tampilkan halaman login
+    return view('auth.login');
     }
 
     // Proses login
@@ -60,6 +76,7 @@ class AuthSessionController extends Controller
                     'superadmin' => route('management-user'),
                     'admin' => route('admin.profile'),
                     'pegawai' => route('staff.index'),
+                    'penilai' => route('penilai.index'),
                     default => route('home'),
                 };
 

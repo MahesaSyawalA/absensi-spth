@@ -165,8 +165,9 @@
                                 <h5>Top Nilai Pegawai ASN</h5>
                             </div>
                             <div class="card-body text-center">
-                                @if(isset($topAsn) && count($topAsn) > 0 && $topAsn[0]['foto'])
-                                    <img class="staff-photo" src="{{ asset($topAsn[0]['foto']) }}" alt="Foto Staff">
+                                @if (isset($topAsn) && count($topAsn) > 0 && $topAsn[0]['user']['foto'])
+                                    <img class="staff-photo" src="{{ asset($topAsn[0]['user']['foto']) }}"
+                                        alt="Foto Staff">
                                 @else
                                     <div class="default-photo">
                                         <span>Tidak ada foto</span>
@@ -174,7 +175,7 @@
                                 @endif
 
                                 <div class="chart-container">
-                                    @if(isset($topAsn) && count($topAsn) > 0)
+                                    @if (isset($topAsn) && count($topAsn) > 0)
                                         <canvas id="graphTopPenilaianAsn"></canvas>
                                     @else
                                         <div class="no-data-message">
@@ -191,8 +192,9 @@
                                 <h5>Top Nilai Pegawai Non ASN</h5>
                             </div>
                             <div class="card-body text-center">
-                                @if(isset($topNonAsn) && count($topNonAsn) > 0 && $topNonAsn[0]['foto'])
-                                    <img class="staff-photo" src="{{ asset($topNonAsn[0]['foto']) }}" alt="Foto Staff">
+                                @if (isset($topNonAsn) && count($topNonAsn) > 0 && $topNonAsn[0]['user']['foto'])
+                                    <img class="staff-photo" src="{{ asset($topNonAsn[0]['user']['foto']) }}"
+                                        alt="Foto Staff">
                                 @else
                                     <div class="default-photo">
                                         <span>Tidak ada foto</span>
@@ -200,7 +202,7 @@
                                 @endif
 
                                 <div class="chart-container">
-                                    @if(isset($topNonAsn) && count($topNonAsn) > 0)
+                                    @if (isset($topNonAsn) && count($topNonAsn) > 0)
                                         <canvas id="graphTopPenilaianNonAsn"></canvas>
                                     @else
                                         <div class="no-data-message">
@@ -216,7 +218,8 @@
                 <div class="card container-fluid">
                     <div class="card-body d-flex justify-content-center">
                         <h1 class="text-center">
-                            Terima Kasih Telah Melakukan Penilaian Pegawai Kami, Jawaban Anda Membantu Kami Dalam Meningkatkan Pelayanan Yang Lebih Baik Lagi
+                            Terima Kasih Telah Melakukan Penilaian Pegawai Kami, Jawaban Anda Membantu Kami Dalam
+                            Meningkatkan Pelayanan Yang Lebih Baik Lagi
                         </h1>
                     </div>
                 </div>
@@ -254,7 +257,7 @@
         var topAsnData = @json($topAsn ?? []);
         var topNonAsnData = @json($topNonAsn ?? []);
 
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             // Fungsi untuk membuat chart dengan penanganan error
             function initChart(selector, data, title) {
                 const ctx = document.getElementById(selector);
@@ -270,10 +273,10 @@
                     new Chart(ctx.getContext("2d"), {
                         type: 'bar',
                         data: {
-                            labels: [data[0].nama || 'Pegawai'],
+                            labels: [data[0]?.user?.nama || 'Pegawai'],
                             datasets: [{
                                 label: title,
-                                data: [data[0].total_avg || 0],
+                                data: [data[0].nilai_akhir || 0],
                                 backgroundColor: '#7366FF',
                                 borderColor: '#7366FF',
                                 borderWidth: 1
@@ -290,9 +293,15 @@
                                     callbacks: {
                                         label: function(context) {
                                             const dataItem = data[context.dataIndex];
+                                            var totalPenilaian = data[context.dataIndex].nilai_akhir;
+                                            var nilaiMasyarakat = data[context.dataIndex].nilai_masyarakat;
+                                            var nilaiPenilai = data[context.dataIndex].nilai_penilai;
+                                            var nilaiAbsensi = data[context.dataIndex].nilai_absensi;
                                             return [
-                                                `Nilai Rata-rata: ${(dataItem.total_avg || 0).toFixed(2)}`,
-                                                `Total Penilaian: ${dataItem.total_penilaian || 0}`
+                                                `Total Penilaian Akhir: ${totalPenilaian}`,
+                                                `Rata-rata Penilaian Masyarakat: ${nilaiMasyarakat}`,
+                                                `Rata-rata Penilaian Penilai: ${nilaiPenilai}`,
+                                                `Total Score Absensi: ${nilaiAbsensi}`,
                                             ];
                                         }
                                     }
@@ -324,7 +333,8 @@
             // Inisialisasi chart dengan penanganan error
             try {
                 initChart('graphTopPenilaianAsn', Array.isArray(topAsnData) ? topAsnData : [], 'Top ASN');
-                initChart('graphTopPenilaianNonAsn', Array.isArray(topNonAsnData) ? topNonAsnData : [], 'Top Non ASN');
+                initChart('graphTopPenilaianNonAsn', Array.isArray(topNonAsnData) ? topNonAsnData : [],
+                    'Top Non ASN');
             } catch (error) {
                 console.error('Error loading chart data:', error);
             }

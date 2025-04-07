@@ -120,8 +120,7 @@
                         <div class="container">
                             <div class="row align-items-center">
                                 <div class="col-md-4 text-center"> <!-- Gambar diperlebar -->
-                                    <img class="img-fluid" src="{{ asset( $selectedUser->foto) }}"
-                                        alt="Foto Staff">
+                                    <img class="img-fluid" src="{{ asset($selectedUser->foto) }}" alt="Foto Staff">
                                 </div>
 
                                 <div class="col-md-8"> <!-- Form diperlebar -->
@@ -166,7 +165,7 @@
                             <form class="row row-cols-1 row-cols-md-2 row-gap-2" method="POST"
                                 action="{{ route('store.penilaian') }}">
                                 @csrf
-                                <input type="hidden" name="slug" id="slugInput" value="{{$slug}}">
+                                <input type="hidden" name="slug" id="slugInput" value="{{ $slug }}">
                                 <div class="col">
                                     <label class="form-label" for="validationTooltipName">Nama</label>
                                     <input class="form-control required" id="validationTooltipName" type="text"
@@ -208,7 +207,7 @@
                                 @endforeach
 
 
-                                <div  class="col-md-12 d-flex justify-content-end mt-auto">
+                                <div class="col-md-12 d-flex justify-content-end mt-auto">
                                     <button type='submit' class="btn btn-pill btn-outline-success">Submit</button>
                                 </div>
                             </form>
@@ -285,7 +284,7 @@
                         if (result.status === 201) {
                             showSuccessAlert(result.body.message);
                             setTimeout(() => {
-                                window.location.href = "/"; // Redirect ke home setelah 3 detik
+                                window.location.href = result.body.route; // Redirect ke home setelah 3 detik
                             }, 3000);
                         } else {
                             showDangerAlert(result.body.message ||
