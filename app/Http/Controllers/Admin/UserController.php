@@ -118,10 +118,10 @@ class UserController extends Controller
         ]);
     }
 
-    public function edit($nip)
+    public function edit($id)
     {
 
-        $user = User::where('nip', $nip)->first();
+        $user = User::where('id', $id)->first();
 
         if (!$user) {
             return response()->json([
@@ -136,7 +136,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request, $nip)
+    public function update(Request $request, $id)
     {
         // Validasi data
         $request->validate([
@@ -166,7 +166,7 @@ class UserController extends Controller
         ]);
 
         // Cari user berdasarkan NIP
-        $user = User::where('nip', $nip)->first();
+        $user = User::where('id', $id)->first();
 
         if (!$user) {
             return response()->json([
