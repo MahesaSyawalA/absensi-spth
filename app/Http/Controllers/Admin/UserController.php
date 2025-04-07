@@ -39,7 +39,7 @@ class UserController extends Controller
 
         // bikin QR pegawai, lalu simpen
         $qr_pegawai = $writer->writeString($qr_address);
-        $path = public_path("images/qr/$slug_pegawai");
+        $path = public_path("images/qr/$slug_pegawai.png");
         if (!file_exists(public_path('images/qr'))) {
             mkdir(public_path('images/qr'), 0777, true);
         }
