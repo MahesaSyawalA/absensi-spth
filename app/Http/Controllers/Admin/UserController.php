@@ -11,6 +11,8 @@ use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
 use Illuminate\Support\Facades\Storage;
 
+use function PHPUnit\Framework\fileExists;
+
 class UserController extends Controller
 {
 
@@ -100,7 +102,6 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
             'nip' => $request->nip,
             'nama' => $request->nama,
-            'slug' => $slug_pegawai,
             'jabatan' => $request->jabatan,
             'tanggal_lahir' => $request->tanggal_lahir,
             'status_pegawai' => $request->status_pegawai,
@@ -135,7 +136,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $nip)
     {
         // Validasi data
         $request->validate([
@@ -145,6 +146,7 @@ class UserController extends Controller
             'status_pegawai' => 'required|string|in:ASN,Non ASN',
             'jenis_kelamin' => 'required|string|in:Laki laki,Perempuan',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'barcode' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'role' => 'required|string|in:superadmin,admin,pegawai',
             'username' => 'nullable|string|unique:users,username|regex:/^[a-zA-Z0-9]+$/|min:4', // Bisa null jika tidak diisi
             'password' => [
@@ -164,9 +166,10 @@ class UserController extends Controller
             'username.min' => 'Username minimal harus memiliki 4 karakter.',
         ]);
 
+        
         // Cari user berdasarkan NIP
-        $user = User::where('id', $id)->first();
-
+        $user = User::where('nip', $nip)->first();
+        
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -198,6 +201,43 @@ class UserController extends Controller
             'role' => $request->role,
         ];
 
+        // Create a PNG renderer for QR
+        $renderer = new ImageRenderer(
+            new RendererStyle(400),
+            new ImagickImageBackEnd()
+        );
+        $writer = new Writer($renderer);
+
+        // inisialisasi variable
+        $slug = $user->slug;
+        $qr_pegawai = '';
+
+        // kalau update nama, buat slug dan qr code baru, hapus qr yang lama
+        if ($request->nama != $user->nama) {
+            $slug = User::generateSlug($request->nama, $nip);
+
+            // delete old qr
+            $filePath = public_path($user->barcode);
+            if ($user->barcode && fileExists($filePath)) {
+                unlink($filePath);
+            }
+
+            $qr_address = "https://sidikspth.com/penilaian-staff/$slug";
+
+            $qr_pegawai = $writer->writeString($qr_address);
+            $path = public_path("images/qr/$slug.png");
+            if (!file_exists(public_path('images/qr'))) {
+                mkdir(public_path('images/qr'), 0777, true);
+            }
+            file_put_contents($path, $qr_pegawai);
+
+            $qr_pegawai = 'images/qr/' . $slug . '.png';
+
+            // simpan ke dalam array 'updateData' biar disimpan ke dalam database
+            $updateData['barcode'] = $qr_pegawai;
+            $updateData['slug'] = $slug;
+        }
+
         // Update username hanya jika diisi
         if ($request->filled('username')) {
             $updateData['username'] = $request->username;
@@ -224,6 +264,12 @@ class UserController extends Controller
         $user = User::where('nip', $nip)->first();
 
         if ($user) {
+            // delete qr user
+            $filePath = public_path($user->barcode);
+            if ($user->barcode && fileExists($filePath)) {
+                unlink($filePath);
+            }
+
             $user->delete();
             return response()->json(['success' => true]);
         }
