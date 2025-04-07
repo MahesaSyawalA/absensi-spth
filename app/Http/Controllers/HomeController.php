@@ -3,24 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kriteria;
+use App\Models\PenilaianKhusus;
 use App\Models\PenilaianMasyarakat;
+use App\Models\RekapanNilaiAkhir;
 use App\Models\RekapanPenilaianBulanan;
 use App\Models\SubKriteria;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $topAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai')
+
+        $topAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai,foto')
             ->whereHas('user', function ($query) {
                 $query->where('status_pegawai', 'ASN');
             })
             ->get()
             ->map(function ($item) {
                 return [
+                    'foto' => $item->user->foto,
                     'nama' => $item->user->nama,
                     'total_penilaian' => $item->total_penilaian,
                     'total_avg' => ($item->avg_perilaku_petugas + $item->avg_penampilan + $item->avg_kecepatan_pelayanan + $item->avg_ketepatan_transparansi) / 4
@@ -29,13 +35,14 @@ class HomeController extends Controller
             ->sortByDesc('total_avg') // Urutkan berdasarkan total_avg dari terbesar
             ->take(1); // Ambil 10 besar
 
-        $topNonAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai')
+        $topNonAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai,foto')
             ->whereHas('user', function ($query) {
                 $query->where('status_pegawai', 'Non ASN');
             })
             ->get()
             ->map(function ($item) {
                 return [
+                    'foto' => $item->user->foto,
                     'nama' => $item->user->nama,
                     'total_penilaian' => $item->total_penilaian,
                     'total_avg' => ($item->avg_perilaku_petugas + $item->avg_penampilan + $item->avg_kecepatan_pelayanan + $item->avg_ketepatan_transparansi) / 4
@@ -44,10 +51,12 @@ class HomeController extends Controller
             ->sortByDesc('total_avg') // Urutkan berdasarkan total_avg dari terbesar
             ->take(1);
 
+        // dd($topAsn);
+
         $staffs = User::select('slug', 'nip', 'nama', 'jabatan', 'foto')->where('role', 'pegawai')->get();
         $data = [
             'staffs' => $staffs,
-            'topAsn'=>$topAsn,
+            'topAsn' => $topAsn,
             'topNonAsn' => $topNonAsn
         ];
         return view('home', $data);
@@ -67,6 +76,9 @@ class HomeController extends Controller
 
     public function storePenilaian(Request $request)
     {
+        $user = Auth::user();
+        $role = $user ? $user->role : null;
+
         $request->validate([
             'nama' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -76,24 +88,56 @@ class HomeController extends Controller
             'subKriteria.*' => 'required|integer|min:10|max:50',
         ]);
 
-
-        // Cari user berdasarkan slug
         $selectedUser = User::select('id')->where('slug', $request->slug)->firstOrFail();
+
+        $bulan = date('m');
+        $tahun = date('Y');
 
         DB::beginTransaction();
         try {
-            // Simpan data ke tabel `penilaian_masyarakat`
-            $penilaian = PenilaianMasyarakat::create([
-                'user_id' => $selectedUser->id,
-                'nama' => $request->nama,
-                'email' => $request->email,
-                'tujuan' => $request->tujuan,
-                'pelayanan' => $request->pelayanan,
-                'perilaku_petugas' => $request->subKriteria[5] ?? null,
-                'penampilan' => $request->subKriteria[6] ?? null,
-                'kecepatan_pelayanan' => $request->subKriteria[7] ?? null,
-                'ketepatan_transparansi' => $request->subKriteria[8] ?? null,
-            ]);
+            if ($role === 'penilai') {
+                // Perhatikan perubahan di query ini: tambah where penilai_id
+                $penilaian = PenilaianKhusus::where('user_id', $selectedUser->id)
+                    ->where('penilai_id', $user->id)
+                    ->where('bulan', $bulan)
+                    ->where('tahun', $tahun)
+                    ->first();
+
+                $data = [
+                    'penilai_id' => $user->id,
+                    'user_id' => $selectedUser->id,
+                    'nama' => $request->nama,
+                    'email' => $request->email,
+                    'tujuan' => $request->tujuan,
+                    'pelayanan' => $request->pelayanan,
+                    'perilaku_petugas' => $request->subKriteria[5] ?? null,
+                    'penampilan' => $request->subKriteria[6] ?? null,
+                    'kecepatan_pelayanan' => $request->subKriteria[7] ?? null,
+                    'ketepatan_transparansi' => $request->subKriteria[8] ?? null,
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
+                ];
+
+                if ($penilaian) {
+                    $penilaian->update($data);
+                } else {
+                    PenilaianKhusus::create($data);
+                }
+            } else {
+                PenilaianMasyarakat::create([
+                    'user_id' => $selectedUser->id,
+                    'nama' => $request->nama,
+                    'email' => $request->email,
+                    'tujuan' => $request->tujuan,
+                    'pelayanan' => $request->pelayanan,
+                    'perilaku_petugas' => $request->subKriteria[5] ?? null,
+                    'penampilan' => $request->subKriteria[6] ?? null,
+                    'kecepatan_pelayanan' => $request->subKriteria[7] ?? null,
+                    'ketepatan_transparansi' => $request->subKriteria[8] ?? null,
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
+                ]);
+            }
 
             DB::commit();
             return response()->json(['message' => 'Penilaian berhasil disimpan'], 201);
@@ -102,4 +146,63 @@ class HomeController extends Controller
             return response()->json(['message' => 'Terjadi kesalahan', 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function print(Request $request)
+{
+    $bulanAwal = $request->input('bulan_awal');
+    $bulanAkhir = $request->input('bulan_akhir');
+    $tahun = date('Y');
+
+    // Ambil data per bulan
+    $penilaianPerBulan = RekapanNilaiAkhir::with('user')
+        ->where('tahun', $tahun)
+        ->whereBetween('bulan', [$bulanAwal, $bulanAkhir])
+        ->get()
+        ->groupBy('user_id'); // Kelompokkan berdasarkan user
+
+    // Akumulasi nilai per user
+    $penilaianTerkumpul = $penilaianPerBulan->map(function ($bulanUser) {
+        $firstData = $bulanUser->first();
+
+        return [
+            'user' => $firstData->user,
+            'total_nilai_absensi' => $bulanUser->sum('nilai_absensi'),
+            'total_nilai_masyarakat' => $bulanUser->sum('nilai_masyarakat'),
+            'total_nilai_penilai' => $bulanUser->sum('nilai_penilai'),
+            'rata_nilai_akhir' => $bulanUser->avg('nilai_akhir'),
+            'jumlah_bulan' => $bulanUser->count(),
+            'detail_per_bulan' => $bulanUser // Jika perlu detail per bulan
+        ];
+    });
+
+    // Ambil top ASN (dari nilai rata-rata)
+    $topAsn = $penilaianTerkumpul
+        ->filter(function ($item) {
+            return $item['user'] && $item['user']->status_pegawai === 'ASN';
+        })
+        ->sortByDesc('rata_nilai_akhir')
+        ->take(1);
+
+    // Ambil top Non ASN (dari nilai rata-rata)
+    $topNonAsn = $penilaianTerkumpul
+        ->filter(function ($item) {
+            return $item['user'] && $item['user']->status_pegawai === 'Non ASN';
+        })
+        ->sortByDesc('rata_nilai_akhir')
+        ->take(1);
+
+    $data = [
+        'rekapPenilaianAkhir' => $penilaianTerkumpul->values(),
+        'topAsn' => $topAsn->values(),
+        'topNonAsn' => $topNonAsn->values(),
+        'periode' => [
+            'bulan_awal' => $bulanAwal,
+            'bulan_akhir' => $bulanAkhir,
+            'tahun' => $tahun
+        ]
+    ];
+
+    $pdf = Pdf::loadView('print', $data);
+    return $pdf->download('laporan-penilaian-'.$bulanAwal.'-'.$bulanAkhir.'-'.$tahun.'.pdf');
+}
 }

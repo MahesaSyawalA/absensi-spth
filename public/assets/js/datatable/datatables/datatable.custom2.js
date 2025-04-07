@@ -4,6 +4,9 @@
     $("#basic-1").DataTable();
     $("#tableSubKriteria").DataTable();
     $("#tableRekapPenilaian").DataTable();
+    $("#tableRekapPenilaianKhusus").DataTable();
+    $("#riwayatPenilaian").DataTable();
+    $("#rekapPenilaianAkhir").DataTable();
     $("#basic-2").DataTable({
       paging: true,
       ordering: false,

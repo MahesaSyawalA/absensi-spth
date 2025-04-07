@@ -93,4 +93,9 @@ class User extends Authenticatable
         $count = User::where('slug', 'LIKE', "$slug%")->count();
         return $count ? "{$slug}-{$count}" : $slug;
     }
+
+    // relasi penilaian
+    public function penilaianMasyarakat(){
+        return $this->hasMany(RekapanPenilaianBulanan::class,'user_id','id');
+    }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\RekapPenilaianController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthSessionController;
 use App\Http\Controllers\Client\AbsensiController;
+use App\Http\Controllers\Client\PenilaiController;
 use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -50,3 +51,7 @@ Route::middleware(['auth', 'is_pegawai'])->group(function () {
     Route::get('/staff/absen-scan', [AbsensiController::class, 'absen']);
     Route::get('/staff/profile', [ProfileController::class, 'index']);
 });
+
+Route::get('/penilai',[PenilaiController::class,'index']);
+Route::get('/print',[HomeController::class,'print'])->name('print-rekap-penilaian');
+
