@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\PegawaiMiddleware;
+use App\Http\Middleware\PenilaiMiddleware;
 use App\Http\Middleware\SanitizeInput;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'sanitize' => SanitizeInput::class,
             'is_admin' => AdminMiddleware::class,
+            'is_penilai' => PenilaiMiddleware::class,
             'is_pegawai' => PegawaiMiddleware::class,
         ]);
     })

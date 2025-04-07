@@ -18,46 +18,34 @@ class HomeController extends Controller
 {
     public function index()
     {
+        $tahun = date('Y');
+        $bulan = date('m');
 
-        $topAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai,foto')
-            ->whereHas('user', function ($query) {
-                $query->where('status_pegawai', 'ASN');
-            })
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'foto' => $item->user->foto,
-                    'nama' => $item->user->nama,
-                    'total_penilaian' => $item->total_penilaian,
-                    'total_avg' => ($item->avg_perilaku_petugas + $item->avg_penampilan + $item->avg_kecepatan_pelayanan + $item->avg_ketepatan_transparansi) / 4
-                ];
-            })
-            ->sortByDesc('total_avg') // Urutkan berdasarkan total_avg dari terbesar
-            ->take(1); // Ambil 10 besar
+        // Ambil data dari RekapanNilaiAkhir tanpa groupBy
+        $rekapanNilaiAkhir = RekapanNilaiAkhir::with('user:id,nama,status_pegawai,foto')
+            ->where('bulan', $bulan)
+            ->where('tahun', $tahun)
+            ->get();
 
-        $topNonAsn = RekapanPenilaianBulanan::with('user:id,nama,status_pegawai,foto')
-            ->whereHas('user', function ($query) {
-                $query->where('status_pegawai', 'Non ASN');
-            })
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'foto' => $item->user->foto,
-                    'nama' => $item->user->nama,
-                    'total_penilaian' => $item->total_penilaian,
-                    'total_avg' => ($item->avg_perilaku_petugas + $item->avg_penampilan + $item->avg_kecepatan_pelayanan + $item->avg_ketepatan_transparansi) / 4
-                ];
-            })
-            ->sortByDesc('total_avg') // Urutkan berdasarkan total_avg dari terbesar
+        // Ambil top ASN
+        $topAsn = $rekapanNilaiAkhir
+            ->filter(fn($item) => $item->user && $item->user->status_pegawai === 'ASN')
+            ->sortByDesc('nilai_akhir')
             ->take(1);
 
-        // dd($topAsn);
+        // Ambil top Non ASN
+        $topNonAsn = $rekapanNilaiAkhir
+            ->filter(fn($item) => $item->user && $item->user->status_pegawai === 'Non ASN')
+            ->sortByDesc('nilai_akhir')
+            ->take(1);
+
+        // dd($topNonAsn);
 
         $staffs = User::select('slug', 'nip', 'nama', 'jabatan', 'foto')->where('role', 'pegawai')->get();
         $data = [
             'staffs' => $staffs,
-            'topAsn' => $topAsn,
-            'topNonAsn' => $topNonAsn
+            'topAsn' => $topAsn->values(),
+            'topNonAsn' => $topNonAsn->values(),
         ];
         return view('home', $data);
     }
@@ -140,7 +128,10 @@ class HomeController extends Controller
             }
 
             DB::commit();
-            return response()->json(['message' => 'Penilaian berhasil disimpan'], 201);
+            return response()->json([
+                'message' => 'Penilaian berhasil disimpan',
+                'route' => $role === 'penilai' ? '/penilai' : '/',
+            ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['message' => 'Terjadi kesalahan', 'error' => $e->getMessage()], 500);
@@ -148,61 +139,61 @@ class HomeController extends Controller
     }
 
     public function print(Request $request)
-{
-    $bulanAwal = $request->input('bulan_awal');
-    $bulanAkhir = $request->input('bulan_akhir');
-    $tahun = date('Y');
+    {
+        $bulanAwal = $request->input('bulan_awal');
+        $bulanAkhir = $request->input('bulan_akhir');
+        $tahun = date('Y');
 
-    // Ambil data per bulan
-    $penilaianPerBulan = RekapanNilaiAkhir::with('user')
-        ->where('tahun', $tahun)
-        ->whereBetween('bulan', [$bulanAwal, $bulanAkhir])
-        ->get()
-        ->groupBy('user_id'); // Kelompokkan berdasarkan user
+        // Ambil data per bulan
+        $penilaianPerBulan = RekapanNilaiAkhir::with('user')
+            ->where('tahun', $tahun)
+            ->whereBetween('bulan', [$bulanAwal, $bulanAkhir])
+            ->get()
+            ->groupBy('user_id'); // Kelompokkan berdasarkan user
 
-    // Akumulasi nilai per user
-    $penilaianTerkumpul = $penilaianPerBulan->map(function ($bulanUser) {
-        $firstData = $bulanUser->first();
+        // Akumulasi nilai per user
+        $penilaianTerkumpul = $penilaianPerBulan->map(function ($bulanUser) {
+            $firstData = $bulanUser->first();
 
-        return [
-            'user' => $firstData->user,
-            'total_nilai_absensi' => $bulanUser->sum('nilai_absensi'),
-            'total_nilai_masyarakat' => $bulanUser->sum('nilai_masyarakat'),
-            'total_nilai_penilai' => $bulanUser->sum('nilai_penilai'),
-            'rata_nilai_akhir' => $bulanUser->avg('nilai_akhir'),
-            'jumlah_bulan' => $bulanUser->count(),
-            'detail_per_bulan' => $bulanUser // Jika perlu detail per bulan
+            return [
+                'user' => $firstData->user,
+                'total_nilai_absensi' => $bulanUser->sum('nilai_absensi'),
+                'total_nilai_masyarakat' => $bulanUser->sum('nilai_masyarakat'),
+                'total_nilai_penilai' => $bulanUser->sum('nilai_penilai'),
+                'rata_nilai_akhir' => $bulanUser->avg('nilai_akhir'),
+                'jumlah_bulan' => $bulanUser->count(),
+                'detail_per_bulan' => $bulanUser // Jika perlu detail per bulan
+            ];
+        });
+
+        // Ambil top ASN (dari nilai rata-rata)
+        $topAsn = $penilaianTerkumpul
+            ->filter(function ($item) {
+                return $item['user'] && $item['user']->status_pegawai === 'ASN';
+            })
+            ->sortByDesc('rata_nilai_akhir')
+            ->take(1);
+
+        // Ambil top Non ASN (dari nilai rata-rata)
+        $topNonAsn = $penilaianTerkumpul
+            ->filter(function ($item) {
+                return $item['user'] && $item['user']->status_pegawai === 'Non ASN';
+            })
+            ->sortByDesc('rata_nilai_akhir')
+            ->take(1);
+
+        $data = [
+            'rekapPenilaianAkhir' => $penilaianTerkumpul->values(),
+            'topAsn' => $topAsn->values(),
+            'topNonAsn' => $topNonAsn->values(),
+            'periode' => [
+                'bulan_awal' => $bulanAwal,
+                'bulan_akhir' => $bulanAkhir,
+                'tahun' => $tahun
+            ]
         ];
-    });
 
-    // Ambil top ASN (dari nilai rata-rata)
-    $topAsn = $penilaianTerkumpul
-        ->filter(function ($item) {
-            return $item['user'] && $item['user']->status_pegawai === 'ASN';
-        })
-        ->sortByDesc('rata_nilai_akhir')
-        ->take(1);
-
-    // Ambil top Non ASN (dari nilai rata-rata)
-    $topNonAsn = $penilaianTerkumpul
-        ->filter(function ($item) {
-            return $item['user'] && $item['user']->status_pegawai === 'Non ASN';
-        })
-        ->sortByDesc('rata_nilai_akhir')
-        ->take(1);
-
-    $data = [
-        'rekapPenilaianAkhir' => $penilaianTerkumpul->values(),
-        'topAsn' => $topAsn->values(),
-        'topNonAsn' => $topNonAsn->values(),
-        'periode' => [
-            'bulan_awal' => $bulanAwal,
-            'bulan_akhir' => $bulanAkhir,
-            'tahun' => $tahun
-        ]
-    ];
-
-    $pdf = Pdf::loadView('print', $data);
-    return $pdf->download('laporan-penilaian-'.$bulanAwal.'-'.$bulanAkhir.'-'.$tahun.'.pdf');
-}
+        $pdf = Pdf::loadView('print', $data);
+        return $pdf->download('laporan-penilaian-' . $bulanAwal . '-' . $bulanAkhir . '-' . $tahun . '.pdf');
+    }
 }

@@ -103,18 +103,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($penilaianAkhir as $data)
-                                <tr>
-                                    <td>{{ $data['user']['nama'] }}</td> <!-- Menampilkan Nama -->
-                                    <td>{{ $data['bulan'] }}</td>
-                                    <td>{{ $data['tahun'] }}</td>
-                                    <td>{{ number_format($data['nilai_absensi'], 2) }}</td>
-                                    <td>{{ number_format($data['nilai_masyarakat'], 2) }}</td>
-                                    <td>{{ number_format($data['nilai_penilai'], 2) }}</td>
-                                    <td>{{ number_format($data['nilai_akhir'], 2) }}</td>
-                                </tr>
-                            @endforeach
-
+                            @if (isset($penilaianAkhir) && !empty($penilaianAkhir))
+                                @foreach ($penilaianAkhir as $data)
+                                    <tr>
+                                        <td>{{ $data['user']['nama'] ?? '-' }}</td>
+                                        <td>{{ $data['bulan'] ?? '-' }}</td>
+                                        <td>{{ $data['tahun'] ?? '-' }}</td>
+                                        <td>{{ number_format($data['nilai_absensi'] ?? 0, 2) }}</td>
+                                        <td>{{ number_format($data['nilai_masyarakat'] ?? 0, 2) }}</td>
+                                        <td>{{ number_format($data['nilai_penilai'] ?? 0, 2) }}</td>
+                                        <td>{{ number_format($data['nilai_akhir'] ?? 0, 2) }}</td>
+                                    </tr>
+                                @endforeach
+                           
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -162,14 +164,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($topEmployeesAttendance as $index => $pegawai)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $pegawai->user->nama }}</td>
-                                    <td>{{ $pegawai->total_absen }}</td>
-                                    <td>{{ $pegawai->total_poin }}</td>
-                                </tr>
-                            @endforeach
+                            @if (isset($topEmployeesAttendance) && !empty($topEmployeesAttendance))
+                                @foreach ($topEmployeesAttendance as $index => $pegawai)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $pegawai->user->nama ?? '-' }}</td>
+                                        <td>{{ $pegawai->total_absen ?? 0 }}</td>
+                                        <td>{{ $pegawai->total_poin ?? 0 }}</td>
+                                    </tr>
+                                @endforeach
+
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -220,19 +225,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($rekapan as $data)
-                                <tr>
-                                    <td>{{ $data['nama'] }}</td> <!-- Menampilkan Nama -->
-                                    <td>{{ $data['bulan'] }}</td>
-                                    <td>{{ $data['tahun'] }}</td>
-                                    <td>{{ $data['total_penilaian'] }}</td>
-                                    <td>{{ number_format($data['avg_perilaku_petugas'], 2) }}</td>
-                                    <td>{{ number_format($data['avg_penampilan'], 2) }}</td>
-                                    <td>{{ number_format($data['avg_kecepatan_pelayanan'], 2) }}</td>
-                                    <td>{{ number_format($data['avg_ketepatan_transparansi'], 2) }}</td>
-                                </tr>
-                            @endforeach
+                            @if (isset($rekapan) && !empty($rekapan))
+                                @foreach ($rekapan as $data)
+                                    <tr>
+                                        <td>{{ $data['nama'] ?? '-' }}</td>
+                                        <td>{{ $data['bulan'] ?? '-' }}</td>
+                                        <td>{{ $data['tahun'] ?? '-' }}</td>
+                                        <td>{{ $data['total_penilaian'] ?? 0 }}</td>
+                                        <td>{{ number_format($data['avg_perilaku_petugas'] ?? 0, 2) }}</td>
+                                        <td>{{ number_format($data['avg_penampilan'] ?? 0, 2) }}</td>
+                                        <td>{{ number_format($data['avg_kecepatan_pelayanan'] ?? 0, 2) }}</td>
+                                        <td>{{ number_format($data['avg_ketepatan_transparansi'] ?? 0, 2) }}</td>
+                                    </tr>
+                                @endforeach
 
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -259,19 +266,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($rekapPenilaianKhusus as $data)
-                                <tr>
-                                    <td>{{ $data['penilai']['nama'] }}</td> <!-- Menampilkan Nama -->
-                                    <td>{{ $data['user']['nama'] }}</td> <!-- Menampilkan Nama -->
-                                    <td>{{ $data['bulan'] }}</td>
-                                    <td>{{ $data['tahun'] }}</td>
-                                    <td>{{ number_format($data['perilaku_petugas'], 2) }}</td>
-                                    <td>{{ number_format($data['penampilan'], 2) }}</td>
-                                    <td>{{ number_format($data['kecepatan_pelayanan'], 2) }}</td>
-                                    <td>{{ number_format($data['ketepatan_transparansi'], 2) }}</td>
-                                </tr>
-                            @endforeach
-
+                            @if (isset($rekapPenilaianKhusus) && !empty($rekapPenilaianKhusus))
+                                @foreach ($rekapPenilaianKhusus as $data)
+                                    <tr>
+                                        <td>{{ $data['penilai']['nama'] ?? '-' }}</td>
+                                        <td>{{ $data['user']['nama'] ?? '-' }}</td>
+                                        <td>{{ $data['bulan'] ?? '-' }}</td>
+                                        <td>{{ $data['tahun'] ?? '-' }}</td>
+                                        <td>{{ number_format($data['perilaku_petugas'] ?? 0, 2) }}</td>
+                                        <td>{{ number_format($data['penampilan'] ?? 0, 2) }}</td>
+                                        <td>{{ number_format($data['kecepatan_pelayanan'] ?? 0, 2) }}</td>
+                                        <td>{{ number_format($data['ketepatan_transparansi'] ?? 0, 2) }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -281,7 +289,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script>
+    {{-- <script>
         var top1_asn = @json($top1_asn);
         var top1_nonasn = @json($top1_nonasn);
 
@@ -365,11 +373,11 @@
                 }
             }
         });
-    </script>
+    </script> --}}
 
     <script>
-        var topAsnData = @json($topAsn);
-        var topNonAsnData = @json($topNonAsn);
+        var topAsnData = @json($topAsn ?? []);
+        var topNonAsnData = @json($topNonAsn ?? []);
 
         document.addEventListener("DOMContentLoaded", function() {
             var ctxAsn = document.getElementById("graphTopPenilaianAsn");
@@ -427,8 +435,17 @@
                 });
             }
 
-            createChart(ctxAsn, topAsnData, "Top Penilaian ASN");
-            createChart(ctxNonAsn, topNonAsnData, "Top Penilaian Non ASN");
+            if (topAsnData && topAsnData.length > 0) {
+                createChart(ctxAsn, topAsnData, "Top Penilaian ASN");
+            } else {
+                ctxAsn.innerHTML = '<p class="text-center">Tidak ada data penilaian ASN.</p>';
+            }
+
+            if (topNonAsnData && topNonAsnData.length > 0) {
+                createChart(ctxNonAsn, topNonAsnData, "Top Penilaian Non ASN");
+            } else {
+                ctxNonAsn.innerHTML = '<p class="text-center">Tidak ada data penilaian Non ASN.</p>';
+            }
         });
     </script>
 
