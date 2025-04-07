@@ -12,6 +12,46 @@
 
 @section('content')
     <div class="container-fluid d-flex flex-column">
+
+        <div class="container-fluid card">
+            <div class="card-header pb-0 card-no-border">
+                <h5>Table Data Rekapan Nilai Akhir</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive custom-scrollbar">
+                    <table class="display table-striped border" id="rekapPenilaianAkhir">
+                        <thead>
+                            <tr>
+                                <th>Pegawai</th>
+                                <th>Bulan</th>
+                                <th>Tahun</th>
+                                <th>Total Point Absensi</th>
+                                <th>Rata-Rata Penilaian Masyarakat</th>
+                                <th>Rata-Rata Penilaian Penilai</th>
+                                <th>Nilai Akhir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (isset($penilaianAkhir) && !empty($penilaianAkhir))
+                                @foreach ($penilaianAkhir as $data)
+                                    <tr>
+                                        <td>{{ $data['user']['nama'] ?? '-' }}</td>
+                                        <td>{{ $data['bulan'] ?? '-' }}</td>
+                                        <td>{{ $data['tahun'] ?? '-' }}</td>
+                                        <td>{{ number_format($data['nilai_absensi'] ?? 0, 2) }}</td>
+                                        <td>{{ number_format($data['nilai_masyarakat'] ?? 0, 2) }}</td>
+                                        <td>{{ number_format($data['nilai_penilai'] ?? 0, 2) }}</td>
+                                        <td>{{ number_format($data['nilai_akhir'] ?? 0, 2) }}</td>
+                                    </tr>
+                                @endforeach
+
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <div class="container-fluid card">
             <div class="card-header pb-0 card-no-border">
                 <h5>List Penilaian Masyarakat</h5>

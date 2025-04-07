@@ -128,7 +128,10 @@ class HomeController extends Controller
             }
 
             DB::commit();
-            return response()->json(['message' => 'Penilaian berhasil disimpan'], 201);
+            return response()->json([
+                'message' => 'Penilaian berhasil disimpan',
+                'route' => $role === 'penilai' ? '/penilai' : '/',
+            ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['message' => 'Terjadi kesalahan', 'error' => $e->getMessage()], 500);

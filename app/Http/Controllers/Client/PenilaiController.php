@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\PenilaianKhusus;
+use App\Models\RekapanNilaiAkhir;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +11,12 @@ use Illuminate\Support\Facades\DB;
 class PenilaiController extends Controller
 {
     public function index(){
+        $penilaianAkhirQuery = RekapanNilaiAkhir::with(['user' => function ($query) {
+            $query->select('id', 'nama', 'status_pegawai');
+        }]);
+
+        $penilaianAkhir = $penilaianAkhirQuery->orderByDesc('nilai_akhir')->get() ?? collect();
+
         $users = User::where('role', 'pegawai')
         ->select('id','slug', 'nama', 'nip', 'jabatan')
         ->with(['penilaianMasyarakat' => function ($query) {
@@ -32,6 +39,7 @@ class PenilaiController extends Controller
             'title' => 'Penilaian',
             'users' => $users,
             'riwayatPenilaian' => $riwayatPenilaian,
+            'penilaianAkhir' => $penilaianAkhir,
         ];
         return view('client.penilai.penilaian',$data);
     }
