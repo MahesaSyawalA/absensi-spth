@@ -114,49 +114,49 @@
                             @csrf <!-- Tambahkan CSRF token -->
                             <div class="form-group">
                                 <label for="username">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" required>
+                                <input type="text" class="form-control text-white" id="username" name="username" required>
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="text" class="form-control" id="password" name="password" required>
+                                <input type="text" class="form-control text-white" id="password" name="password" required>
                             </div>
                             <div class="form-group">
                                 <label for="nip">NIP</label>
-                                <input type="text" class="form-control" id="nip" name="nip" required>
+                                <input type="text" class="form-control text-white" id="nip" name="nip" required>
                             </div>
                             <div class="form-group">
                                 <label for="nama">Nama</label>
-                                <input type="text" class="form-control" id="nama" name="nama" required>
+                                <input type="text" class="form-control text-white" id="nama" name="nama" required>
                             </div>
                             <div class="form-group">
                                 <label for="jabatan">Jabatan</label>
-                                <input type="text" class="form-control" id="jabatan" name="jabatan" required>
+                                <input type="text" class="form-control text-white" id="jabatan" name="jabatan" required>
                             </div>
                             <div class="form-group">
                                 <label for="tanggal_lahir">Tanggal Lahir</label>
-                                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" required>
+                                <input type="date" class="form-control text-white" id="tanggal_lahir" name="tanggal_lahir" required>
                             </div>
                             <div class="form-group">
                                 <label for="status_pegawai">Status</label>
-                                <select class="form-control" id="status" name="status_pegawai" required>
+                                <select class="form-control text-white" id="status" name="status_pegawai" required>
                                     <option value="ASN">ASN</option>
                                     <option value="Non ASN">Non ASN</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="jenis_kelamin">Jenis Kelamin</label>
-                                <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required>
+                                <select class="form-control text-white" id="jenis_kelamin" name="jenis_kelamin" required>
                                     <option value="Laki laki">Laki laki</option>
                                     <option value="Perempuan">Perempuan</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="foto">Foto</label>
-                                <input type="file" class="form-control" id="foto" name="foto">
+                                <input type="file" class="form-control text-white" id="foto" name="foto">
                             </div>
                             <div class="form-group">
                                 <label for="role">Role</label>
-                                <select class="form-control" id="role" name="role" required>
+                                <select class="form-control text-white" id="role" name="role" required>
                                     <option value="superadmin">Super Admin</option>
                                     <option value="admin">Admin</option>
                                     <option value="pegawai">Pegawai</option>
@@ -186,50 +186,50 @@
                     <form id="editUserForm">
                         <div class="form-group mb-2">
                             <label for="username" class="d-flex justify-content-between">Username <span>isi jika ingin mengubah</span></label>
-                            <input type="text" class="form-control" id="editUsername" name="username" required>
+                            <input type="text" class="form-control text-white" id="editUsername" name="username" required>
                         </div>
                         <div class="form-group mb-2">
                             <label for="password" class="d-flex justify-content-between">Password <span>Isi jika ingin mengubah</span></label>
-                            <input type="text" class="form-control" id="password" name="password" required>
+                            <input type="text" class="form-control text-white" id="password" name="password" required>
                         </div>
                         <div class="form-group mb-2">
                             <label for="editNip">NIP</label>
-                            <input type="text" class="form-control" id="editNip" name="nip" required>
+                            <input type="text" class="form-control text-white" id="editNip" name="nip" required>
                         </div>
                         <div class="form-group mb-2">
                             <label for="editNama">Nama</label>
-                            <input type="text" class="form-control" id="editNama" name="nama" required>
+                            <input type="text" class="form-control text-white" id="editNama" name="nama" required>
                         </div>
                         <div class="form-group mb-2">
                             <label for="editJabatan">Jabatan</label>
-                            <input type="text" class="form-control" id="editJabatan" name="jabatan" required>
+                            <input type="text" class="form-control text-white" id="editJabatan" name="jabatan" required>
                         </div>
                         <div class="form-group mb-2">
                             <label for="editTanggalLahir">Tanggal Lahir</label>
-                            <input type="date" class="form-control" id="editTanggalLahir" name="tanggal_lahir"
+                            <input type="date" class="form-control text-white" id="editTanggalLahir" name="tanggal_lahir"
                                 required>
                         </div>
                         <div class="form-group mb-2">
                             <label for="editStatus">Status</label>
-                            <select class="form-control" id="editStatus" name="status_pegawai" required>
+                            <select class="form-control text-white" id="editStatus" name="status_pegawai" required>
                                 <option value="ASN">ASN</option>
                                 <option value="Non ASN">Non ASN</option>
                             </select>
                         </div>
                         <div class="form-group mb-2">
                             <label for="editJenisKelamin">Jenis Kelamin</label>
-                            <select class="form-control" id="editJenisKelamin" name="jenis_kelamin" required>
+                            <select class="form-control text-white" id="editJenisKelamin" name="jenis_kelamin" required>
                                 <option value="Laki laki">Laki laki</option>
                                 <option value="Perempuan">Perempuan</option>
                             </select>
                         </div>
                         <div class="form-group mb-2">
                             <label for="editFoto" class="d-flex justify-content-between">Foto <span>isi jika ingin mengubah</span></label>
-                            <input type="file" class="form-control" id="editFoto" name="foto">
+                            <input type="file" class="form-control text-white" id="editFoto" name="foto">
                         </div>
                         <div class="form-group mb-2">
                             <label for="editRole">Role</label>
-                            <select class="form-control" id="editRole" name="role" required>
+                            <select class="form-control text-white" id="editRole" name="role" required>
                                 <option value="superadmin">Super Admin</option>
                                 <option value="admin">Admin</option>
                                 <option value="pegawai">Pegawai</option>
