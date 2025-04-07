@@ -18,7 +18,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'nip';
     public $incrementing = false;
     protected $fillable = [
         'nip',
@@ -60,7 +60,7 @@ class User extends Authenticatable
 
     public function isSuperAdmin()
     {
-        return $this->role === 'super-admin';
+        return $this->role === 'superadmin';
     }
 
     public function isAdmin()

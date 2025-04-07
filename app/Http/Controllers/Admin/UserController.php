@@ -118,10 +118,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function edit($id)
+    public function edit($nip)
     {
-
-        $user = User::where('id', $id)->first();
+        $user = User::where('nip', $nip)->first();
 
         if (!$user) {
             return response()->json([
