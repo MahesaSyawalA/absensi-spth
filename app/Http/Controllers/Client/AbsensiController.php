@@ -20,7 +20,7 @@ class AbsensiController extends Controller
         $startDate = Carbon::now()->timezone('Asia/Jakarta')->startOfMonth();
         $endDate = Carbon::now()->timezone('Asia/Jakarta')->endOfMonth();
         $period = CarbonPeriod::create($startDate, $endDate); // seluruh tanggal pada bulan itu
-        $absensi_today = DB::table('absensi')->whereDate('scanned_at', $currentDate)->get(); // absensi per hari ini
+        $absensi_today = DB::table('absensi')->where('user_id', $user_id)->whereDate('scanned_at', $currentDate)->get(); // absensi per hari ini
         $list_absensi = [];
 
         // cek setiap absensi per hari ini apakah ada
