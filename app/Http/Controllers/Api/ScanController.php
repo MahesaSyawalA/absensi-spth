@@ -28,8 +28,8 @@ class ScanController extends Controller
         $officeLatitude = -6.9328394;
         $officeLongitude = 107.771067;
 
-        $gapuraLatitude = -6.886051;
-        $gapuraLongitude = 107.763136;
+        $gapuraLatitude = -6.9329598;
+        $gapuraLongitude = 107.7709105;
 
         $distanceFromOffice = $this->calculateDistance($officeLatitude, $officeLongitude, $userLatitude, $userLongitude);
         $distanceFromGapura = $this->calculateDistance($gapuraLatitude, $gapuraLongitude, $userLatitude, $userLongitude);
@@ -38,7 +38,7 @@ class ScanController extends Controller
         if ($distanceFromOffice <= $radius || $distanceFromGapura <= $radius) {
 
             $absen1_start = '05:30';
-            $absen1_end = '07:00';
+            $absen1_end = '07:30';
             $absen1_max = '08:30';
 
             $absen2_start = '11:00';
