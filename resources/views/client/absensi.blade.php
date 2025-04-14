@@ -41,10 +41,19 @@
                             <p class="card-text">Silakan lakukan absensi dengan menekan tombol di bawah.</p>
 
                             {{-- LINK AKSI UNTUK ABSENSI --}}
-                            <a href="/staff/absen-scan" class="btn btn-primary">
-                                <div id="button-attendance-text" style="display: flex; gap: 10px">
+                            <a href="/staff/absen-scan" class="btn btn-primary w-75">
+                                <div id="button-attendance-text" style="display: flex; justify-content: center; gap: 10px">
                                     <i class="fas fa-qrcode" style="margin-block: auto"></i>
                                     <span>Absen Sekarang</span>
+                                </div>
+                                <div id="spinner" class="custom-loader" style="margin-inline: auto; display: none;"></div>
+                            </a>
+
+                            {{-- LINK AKSI UNTUK ABSENSI KHUSUS --}}
+                            <a href="/staff/absen-khusus" class="btn btn-outline-primary mt-2 w-75">
+                                <div id="button-attendance-text" style="display: flex; justify-content: center; gap: 10px">
+                                    <i class="fas fa-pen" style="margin-block: auto"></i>
+                                    <span>Absen Khusus</span>
                                 </div>
                                 <div id="spinner" class="custom-loader" style="margin-inline: auto; display: none;"></div>
                             </a>
