@@ -66,7 +66,7 @@
                         enctype="multipart/form-data">
                         @csrf <!-- Tambahkan CSRF token -->
                         <div class="form-group">
-                            <label for="dokumen-wfh">Foto</label>
+                            <label for="dokumen-wfh">Dokumen Bukti</label>
                             <input type="file" class="form-control" id="dokumen-wfh" name="dokumen-wfh">
                         </div>
                         <button type="submit" class="btn btn-primary m-t-20">Submit</button>
