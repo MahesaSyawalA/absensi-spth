@@ -16,10 +16,10 @@ class PegawaiMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::user(); 
+        $user = Auth::user();
 
         // Check if the user is an admin
-        if ($user && $user->role === 'pegawai') {
+        if ($user && $user->role === 'pegawai' || $user && $user->role === 'penilai') {
             return $next($request);
         }
 
