@@ -59,6 +59,11 @@
                                 <use href="../assets/svg/icon-sprite.svg#stroke-learning"></use>
                             </svg><span>Kriteria Penilaian</span></a>
                     </li>
+                    <li class="sidebar-list"><i class="fa-solid fa-thumbtack"></i><a
+                            class="sidebar-link sidebar-title link-nav" href="/admin/pengajuan-absen">
+                            <i class="fas fa-clipboard-check m-l-5 m-r-10" style="text-align: center; color: #adadad; font-size: 17px"></i>
+                            <span>Pengajuan Absen</span></a>
+                    </li>
                     <svg class="stroke-icon">
                         <use href="../assets/svg/icon-sprite.svg#stroke-form"></use>
                     </svg>

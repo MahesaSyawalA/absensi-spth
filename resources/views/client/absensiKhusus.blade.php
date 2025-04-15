@@ -13,8 +13,10 @@
 @section('content')
 
     <div class="card">
+        <div class="card-header pb-0 card-no-border d-flex justify-content-between">
+            <h5>Absensi Khusus</h5>
+        </div>
         <div class="card-body">
-            <span class="fs-3">Absensi Khusus</span>
             <span class="d-block fw-normal fs-6 m-b-10 m-t-20">
                 Gunakan halaman ini untuk absen diluar jadwal dan tempat yang telah ditentukan. File
                 dokumen yang diunggah akan diteruskan kepada admin untuk pengajuan absensi.

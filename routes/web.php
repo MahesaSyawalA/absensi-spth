@@ -9,7 +9,7 @@ use App\Http\Controllers\Client\AbsensiController;
 use App\Http\Controllers\Client\PenilaiController;
 use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\HomeController;
-use App\Models\Absensi;
+use App\Http\Controllers\PengajuanAbsenController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -45,6 +45,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
     Route::get('/admin/rekap-penilaian', [RekapPenilaianController::class, 'index'])->name('admin.index');
     Route::get('/admin/kriteria-penilaian', [KriteriaPenilaianController::class, 'index']);
+
+    Route::get('/admin/pengajuan-absen', [PengajuanAbsenController::class, 'index'])->name('admin.pengajuan-absen');
 });
 
 Route::middleware(['auth', 'is_pegawai'])->group(function () {
