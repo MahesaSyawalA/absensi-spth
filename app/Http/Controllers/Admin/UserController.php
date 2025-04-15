@@ -52,18 +52,18 @@ class UserController extends Controller
         // Validasi data
         $request->validate([
             'nip' => 'required|unique:users,nip|regex:/^[a-zA-Z0-9]+$/',
-            'nama' => 'required|string|regex:/^[a-zA-Z\s.,]+$/',
+            'nama' => 'required|string|regex:/^[a-zA-Z0-9\s.,]+$/',
             'jabatan' => 'required|string|regex:/^[a-zA-Z\s]+$/',
             'tanggal_lahir' => 'required|date',
             'status_pegawai' => 'required|string|in:ASN,Non ASN',
             'jenis_kelamin' => 'required|string|in:Laki laki,Perempuan',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'barcode' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-            'role' => 'required|string|in:superadmin,admin,pegawai',
+            'role' => 'required|string|in:superadmin,admin,pegawai,penilai',
 
             'username' => 'required|string|unique:users,username|regex:/^[a-zA-Z0-9]+$/|min:4',
 
-            'password' => [
+            'password' => [ 
                 'required',
                 'string',
                 'min:8', // Minimal 8 karakter
@@ -166,10 +166,10 @@ class UserController extends Controller
             'username.min' => 'Username minimal harus memiliki 4 karakter.',
         ]);
 
-        
+
         // Cari user berdasarkan NIP
         $user = User::where('nip', $nip)->first();
-        
+
         if (!$user) {
             return response()->json([
                 'success' => false,
