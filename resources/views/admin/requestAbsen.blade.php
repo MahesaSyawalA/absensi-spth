@@ -10,34 +10,49 @@
 @endsection
 
 @section('content')
-<div class="card">
-    <div class="card-header pb-0 card-no-border d-flex justify-content-between">
-        <h5>Pengajuan Absen</h5>
-    </div>
-    <div class="card-body">
-        <p> Daftar pengajuan absen pegawai yang dinas keluar, sakit, atau WFH/WFA. </p>
-        <div class="table-responsive custom-scrollbar">
-            <table class="display table-striped border" id="basic-1">
-                <thead>
-                    <tr>
-                        <th>ID User</th>
-                        <th>Keterangan</th>
-                        <th>Tanggal diajukan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($absen_data as $a)
+    <div class="card">
+        <div class="card-header pb-0 card-no-border d-flex justify-content-between">
+            <h5>Pengajuan Absen</h5>
+        </div>
+        <div class="card-body">
+            <p> Daftar pengajuan absen pegawai yang dinas keluar, sakit, atau WFH/WFA. </p>
+            <div class="table-responsive custom-scrollbar">
+                <table class="display table-striped border" id="basic-1">
+                    <thead>
                         <tr>
-                            <td>{{ $a->user_id }}</td>
-                            <td>{{ $a->keterangan }}</td>
-                            <td>{{ $a->scanned_at }}</td>
+                            <th>ID Pegawai</th>
+                            <th>NIP</th>
+                            <th>Nama Pegawai</th>
+                            <th>Tanggal diajukan</th>
+                            <th>Dokumen/Surat</th>
+                            <th>Aksi</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($absen_data as $a)
+                            <tr>
+                                <td>{{ $a->user_id }}</td>
+                                <td>{{ $a->nip_pegawai }}</td>
+                                <td>{{ $a->nama_pegawai }}</td>
+                                <td>{{ $a->scanned_at }}</td>
+                                <td class="text-center">
+                                    <button class="btn btn-outline-primary">Lihat</button>
+                                </td>
+                                <td class="d-flex gap-3">
+                                    <button class="btn btn-success w-50">
+                                        <i class="fas fa-check-circle"></i>
+                                    </button>
+                                    <button class="btn btn-danger w-50">
+                                        <i class="fas fa-close"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 @endsection
 
 
