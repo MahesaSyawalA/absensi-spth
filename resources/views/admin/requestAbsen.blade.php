@@ -39,3 +39,19 @@
     </div>
 </div>
 @endsection
+
+
+@section('scriptPlugins')
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
+    <script src="../assets/js/sidebar-menu.js"></script>
+    <script src="../assets/js/sidebar-pin.js"></script>
+    <script src="../assets/js/slick/slick.min.js"></script>
+    <script src="../assets/js/slick/slick.js"></script>
+    <script src="../assets/js/header-slick.js"></script>
+    {{-- <script src="../assets/js/chart/chartjs/chart.min.js"></script> --}}
+    <script src="../assets/js/chart/chartjs/chart.custom.js"></script>
+    <script src="../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
+    <script src="../assets/js/datatable/datatables/dataTables1.js"></script>
+    <script src="../assets/js/datatable/datatables/dataTables.bootstrap5.js"></script>
+    <script src="../assets/js/datatable/datatables/datatable.custom2.js"></script>
+@endsection
