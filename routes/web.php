@@ -52,9 +52,6 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 Route::middleware(['auth', 'is_pegawai'])->group(function () {
     Route::get('/staff/absensi', [AbsensiController::class, 'index'])->name('staff.index');
     Route::get('/staff/absen-khusus', [AbsensiController::class, 'absenKhusus']);
-    Route::post('/staff/absen-khusus/dinas', [AbsensiController::class, 'absenDinas'])->name('absen.dinas');
-    Route::post('/staff/absen-khusus/sakit', [AbsensiController::class, 'absenSakit'])->name('absen.sakit');
-    Route::post('/staff/absen-khusus/wfh', [AbsensiController::class, 'absenWFH'])->name('absen.wfh');
     Route::get('/staff/absen-scan', [AbsensiController::class, 'absen']);
     Route::get('/staff/profile', [ProfileController::class, 'index']);
 });
