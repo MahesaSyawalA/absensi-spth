@@ -29,7 +29,7 @@ class PengajuanAbsenController extends Controller
             'user_id' => 'required|string',
             'nip_pegawai' => 'required|string',
             'nama_pegawai' => 'required|string',
-            'jenis_absen' => [Rule::enum(PengajuanAbsen::class)],
+            'jenis_absen' => 'required|string|in:Dinas,Sakit,WFH',
             'dokumen' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
