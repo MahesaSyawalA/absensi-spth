@@ -18,125 +18,109 @@
             <div id="distanceFromGapura" class="f-15 m-t-5 text-center"></div>
             <div id="distanceFromOffice" class="f-15 m-t-5 text-center"></div>
 
-            <button id="retryButton" class="btn btn-primary"
-                style="display: none; width: 50%; margin-inline: auto; margin-top: 20px">Ulangi</button>
-            <a href="/staff/absensi" class="btn btn-primary" id="back-to-prevpage"
-                style="display: none; width: 50%; margin-inline: auto; margin-top: 50px">Kembali ke halaman absensi utama</>
-
-                <script>
-                    document.getElementById("retryButton").addEventListener("click", function() {
-                        checkGeolocationPermission();
-                    });
-
-                    async function checkGeolocationPermission() {
-                        try {
-                            let permissionStatus = await navigator.permissions.query({
-                                name: 'geolocation'
-                            });
-
+            <button id="retryButton" class="btn btn-primary" style="display: none; width: 50%; margin-inline: auto; margin-top: 20px">Ulangi</button>
+            <a href="/staff/absensi" class="btn btn-primary" id="back-to-prevpage" style="display: none; width: 50%; margin-inline: auto; margin-top: 50px">Kembali ke halaman absensi utama</>
+            <script>
+                document.getElementById("retryButton").addEventListener("click", function() {
+                    checkGeolocationPermission();
+                });
+                async function checkGeolocationPermission() {
+                    try {
+                        let permissionStatus = await navigator.permissions.query({
+                            name: 'geolocation'
+                        });
+                        if (permissionStatus.state === 'granted') {
+                            getLocation();
+                        } else if (permissionStatus.state === 'prompt') {
+                            getLocation();
+                        } else {
+                            alert("Akses lokasi tidak diizinkan. Harap izinkan akses pada browser.");
+                            document.getElementById("spinner").style.display = "none";
+                            document.getElementById("retryButton").style.display = "block";
+                        }
+                        permissionStatus.onchange = () => {
                             if (permissionStatus.state === 'granted') {
                                 getLocation();
-                            } else if (permissionStatus.state === 'prompt') {
-                                getLocation();
-                            } else {
-                                alert("Akses lokasi tidak diizinkan. Harap izinkan akses pada browser.");
-                                document.getElementById("spinner").style.display = "none";
-                                document.getElementById("retryButton").style.display = "block";
                             }
-
-                            permissionStatus.onchange = () => {
-                                if (permissionStatus.state === 'granted') {
-                                    getLocation();
-                                }
-                            };
-                        } catch (error) {
-                            console.error("Error memeriksa izin geolokasi: ", error);
-                        }
+                        };
+                    } catch (error) {
+                        console.error("Error memeriksa izin geolokasi: ", error);
                     }
-
-                    function getLocation() {
-                        navigator.geolocation.getCurrentPosition(
-                            (position) => {
-                                let latitude = position.coords.latitude;
-                                let longitude = position.coords.longitude;
-                                let id_pegawai = @json($user->id);
-
-                                // remove previous state on elements
-                                document.getElementById("spinner").style.display = "block";
-                                document.getElementById("retryButton").style.display = "none";
-                                document.getElementById("result").innerText = "";
-                                document.getElementById("absen_ke").innerText = "";
-                                document.getElementById("latlon").innerText = "";
-                                document.getElementById("time").innerText = "";
-                                document.getElementById("datetime").innerText = "";
-                                document.getElementById("distanceFromGapura").innerText = "";
-                                document.getElementById("distanceFromOffice").innerText = "";
-                                document.getElementById("back-to-prevpage").style.display = "none";
-
-                                fetch('/api/attendance', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                        },
-                                        body: JSON.stringify({
-                                            latitude: latitude,
-                                            longitude: longitude,
-                                            id_pegawai: id_pegawai,
-                                        })
+                }
+                function getLocation() {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            let latitude = position.coords.latitude;
+                            let longitude = position.coords.longitude;
+                            let id_pegawai = @json($user->id);
+                            // remove previous state on elements
+                            document.getElementById("spinner").style.display = "block";
+                            document.getElementById("retryButton").style.display = "none";
+                            document.getElementById("result").innerText = "";
+                            document.getElementById("absen_ke").innerText = "";
+                            document.getElementById("latlon").innerText = "";
+                            document.getElementById("time").innerText = "";
+                            document.getElementById("datetime").innerText = "";
+                            document.getElementById("distanceFromGapura").innerText = "";
+                            document.getElementById("distanceFromOffice").innerText = "";
+                            document.getElementById("back-to-prevpage").style.display = "none";
+                            fetch('/attendance', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    },
+                                    body: JSON.stringify({
+                                        latitude: latitude,
+                                        longitude: longitude,
+                                        id_pegawai: id_pegawai,
                                     })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        if (data.message) {
-                                            document.getElementById("spinner").style.display = "none";
-                                            document.getElementById("result").innerText = data.message;
-
-                                            if (data.distanceFromGapura) {
-                                                document.getElementById("distanceFromGapura").innerText =
-                                                    `Radius dari Gapura: ${data.distanceFromGapura} meter`;
-                                            }
-
-                                            if (data.distanceFromOffice) {
-                                                document.getElementById("distanceFromOffice").innerText =
-                                                    `Radius dari Kantor: ${data.distanceFromOffice} meter`;
-                                            }
-
-                                            if (data.latitude & data.longitude) {
-                                                document.getElementById("latlon").innerText =
-                                                    `Lat: ${data.latitude}, Lon: ${data.longitude}`;
-                                            }
-
-                                            if (data.time) {
-                                                document.getElementById("time").innerText = `${data.time} WIB`;
-                                            }
-
-                                            if (data.datetime) {
-                                                document.getElementById("datetime").innerText = data.datetime;
-                                            }
-
-                                            if (data.absen_ke) {
-                                                document.getElementById("absen_ke").innerText = `Absen ke-${data.absen_ke}`;
-                                            }
-                                            document.getElementById("back-to-prevpage").style.display = "block";
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.message) {
+                                        document.getElementById("spinner").style.display = "none";
+                                        document.getElementById("result").innerText = data.message;
+                                        if (data.distanceFromGapura) {
+                                            document.getElementById("distanceFromGapura").innerText =
+                                                `Radius dari Gapura: ${data.distanceFromGapura} meter`;
                                         }
-                                    });
-                            },
-                            (error) => {
-                                alert('Gagal mendapatkan lokasi: ' + error.message);
-                                document.getElementById("spinner").style.display = "none";
-                                document.getElementById("retryButton").style.display = "block";
-                            }
-                        );
-                    }
-
-                    window.onload = function() {
-                        if (navigator.geolocation) {
-                            checkGeolocationPermission();
-                        } else {
-                            alert("Geolocation tidak didukung oleh browser ini.");
+                                        if (data.distanceFromOffice) {
+                                            document.getElementById("distanceFromOffice").innerText =
+                                                `Radius dari Kantor: ${data.distanceFromOffice} meter`;
+                                        }
+                                        if (data.latitude & data.longitude) {
+                                            document.getElementById("latlon").innerText =
+                                                `Lat: ${data.latitude}, Lon: ${data.longitude}`;
+                                        }
+                                        if (data.time) {
+                                            document.getElementById("time").innerText = `${data.time} WIB`;
+                                        }
+                                        if (data.datetime) {
+                                            document.getElementById("datetime").innerText = data.datetime;
+                                        }
+                                        if (data.absen_ke) {
+                                            document.getElementById("absen_ke").innerText = `Absen ke-${data.absen_ke}`;
+                                        }
+                                        document.getElementById("back-to-prevpage").style.display = "block";
+                                    }
+                                });
+                        },
+                        (error) => {
+                            alert('Gagal mendapatkan lokasi: ' + error.message);
+                            document.getElementById("spinner").style.display = "none";
+                            document.getElementById("retryButton").style.display = "block";
                         }
+                    );
+                }
+                window.onload = function() {
+                    if (navigator.geolocation) {
+                        checkGeolocationPermission();
+                    } else {
+                        alert("Geolocation tidak didukung oleh browser ini.");
                     }
-                </script>
+                }
+            </script>
         </div>
     </div>
 @endsection

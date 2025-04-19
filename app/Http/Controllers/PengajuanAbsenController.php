@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
-use App\Models\Absensi;
 use App\Models\PengajuanAbsen;
-use Illuminate\Validation\Rule;
 
 class PengajuanAbsenController extends Controller
 {
@@ -15,8 +12,6 @@ class PengajuanAbsenController extends Controller
     {
 
         $absen_data = PengajuanAbsen::all();
-
-        dd($absen_data);
 
         return view('admin.requestAbsen', [
             'absen_data' => $absen_data,

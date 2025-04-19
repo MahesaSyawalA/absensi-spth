@@ -9,6 +9,11 @@
     <link rel="stylesheet" type="text/css" href="../assets/css/vendors/dataTables.bootstrap5.css">
 @endsection
 
+@php
+    use Carbon\Carbon; // buat ngubah tanggal pengajuan
+@endphp
+
+
 @section('content')
     <div class="card">
         <div class="card-header pb-0 card-no-border d-flex justify-content-between">
@@ -23,6 +28,7 @@
                             <th>ID Pegawai</th>
                             <th>NIP</th>
                             <th>Nama Pegawai</th>
+                            <th>Jenis Absen</th>
                             <th>Tanggal diajukan</th>
                             <th>Dokumen/Surat</th>
                             <th>Aksi</th>
@@ -34,9 +40,27 @@
                                 <td>{{ $a->user_id }}</td>
                                 <td>{{ $a->nip_pegawai }}</td>
                                 <td>{{ $a->nama_pegawai }}</td>
-                                <td>{{ $a->scanned_at }}</td>
+                                <td>{{ $a->jenis_absen }}</td>
+                                <td>{{ Carbon::parse($a->tanggal_pengajuan)->format('d/m/y, H:i') }}</td>
                                 <td class="text-center">
-                                    <button class="btn btn-outline-primary">Lihat</button>
+                                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#previewDokumenModal{{ $a->id }}">Lihat</button>
+                                    <!-- Image Preview Modal -->
+                                    <div class="modal fade" id="previewDokumenModal{{ $a->id }}" tabindex="-1" aria-labelledby="previewDokumenModal{{ $a->id }}Label" aria-hidden="true">
+                                        <div class="modal-dialog modal-xl modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="previewDokumenModal{{ $a->id }}Label"></h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body" style="overflow: scroll">
+                                                    <img src="{{ asset($a->dokumen) }}" alt="dokumen-preview" style="width: 100%; height: 100%;">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td class="d-flex gap-3">
                                     <button class="btn btn-success w-50">

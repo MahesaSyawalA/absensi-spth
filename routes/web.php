@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AuthSessionController;
 use App\Http\Controllers\Client\AbsensiController;
 use App\Http\Controllers\Client\PenilaiController;
 use App\Http\Controllers\Client\ProfileController;
+use App\Http\Controllers\Api\ScanController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PengajuanAbsenController;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +29,6 @@ Route::get('/check-login', [AuthSessionController::class, 'checkLoginStatus']);
 
 // Route yang dilindungi auth
 Route::middleware(['auth', 'is_admin'])->group(function () {
-
     Route::get('/admin/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 
     Route::get('/admin/management-user', [UserController::class, 'index'])->name('management-user');
@@ -54,8 +54,9 @@ Route::middleware(['auth', 'is_pegawai'])->group(function () {
     Route::get('/staff/absen-khusus', [AbsensiController::class, 'absenKhusus']);
     Route::get('/staff/absen-scan', [AbsensiController::class, 'absen']);
     Route::get('/staff/profile', [ProfileController::class, 'index']);
+    Route::post('/attendance', [ScanController::class, 'validateAttendance'])->name('absen.scan');
+    Route::post('/attendance/absen-khusus', [PengajuanAbsenController::class, 'store'])->name('absen_khusus.store');
 });
 
-Route::get('/penilai',[PenilaiController::class,'index'])->middleware('is_penilai')->name('penilai.index');
-Route::get('/print',[HomeController::class,'print'])->name('print-rekap-penilaian');
-
+Route::get('/penilai', [PenilaiController::class, 'index'])->middleware('is_penilai')->name('penilai.index');
+Route::get('/print', [HomeController::class, 'print'])->name('print-rekap-penilaian');
