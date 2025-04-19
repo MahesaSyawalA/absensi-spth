@@ -50,7 +50,7 @@
                         <input id="jenis_absen" name="jenis_absen" type="text" value="Dinas" hidden>
                         <input id="dokumenDinas" name="dokumenDinas" type="file" class="form-control" required>
                         <button type="submit" class="btn btn-primary m-t-20">
-                            <div id="spinner-1" class="custom-loader-white" style="display: none"></div>
+                            <div id="spinner-1" class="custom-loader-white-small" style="display: none"></div>
                             <p id="submit-text-1" style="color: white">Submit</p>
                         </button>
 
@@ -70,7 +70,7 @@
                         <input id="jenis_absen" name="jenis_absen" type="text" value="Sakit" hidden>
                         <input id="dokumenSakit" name="dokumenSakit" type="file" class="form-control" required>
                         <button type="submit" class="btn btn-primary m-t-20">
-                            <div id="spinner-2" class="custom-loader-white" style="display: none"></div>
+                            <div id="spinner-2" class="custom-loader-white-small" style="display: none"></div>
                             <p id="submit-text-2" style="color: white">Submit</p>
                         </button>
 
@@ -90,7 +90,7 @@
                         <input id="jenis_absen" name="jenis_absen" type="text" value="WFH" hidden>
                         <input id="dokumenWFH" name="dokumenWFH" type="file" class="form-control" required>
                         <button type="submit" class="btn btn-primary m-t-20">
-                            <div id="spinner-3" class="custom-loader-white" style="display: none"></div>
+                            <div id="spinner-3" class="custom-loader-white-small" style="display: none"></div>
                             <p id="submit-text-3" style="color: white">Submit</p>
                         </button>
 
