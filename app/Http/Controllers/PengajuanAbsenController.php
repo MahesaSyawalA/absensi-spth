@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Models\PengajuanAbsen;
+use App\Models\Absensi;
 
 class PengajuanAbsenController extends Controller
 {
     public function index()
     {
 
-        $absen_data = PengajuanAbsen::all();
+        $absen_data = PengajuanAbsen::all()->where('status', '=', 'Pending');
 
         return view('admin.requestAbsen', [
             'absen_data' => $absen_data,
@@ -47,11 +48,46 @@ class PengajuanAbsenController extends Controller
             'status' => 'Pending',
             'tanggal_pengajuan' => $tanggal_pengajuan,
         ]);
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Absen khusus berhasil diajukan.',
             'absen_diajukan' => $absen_diajukan,
+        ]);
+    }
+
+    public function approveOrReject(Request $request, $id)
+    {
+        // update status menjadi diterima/ditolak
+        $attendanceRequest = PengajuanAbsen::where('id', $id)->first();
+        $attendanceRequest->update([
+            'status' => $request->updatedStatus,
+        ]);
+
+        // jika pengajuan absen diterima, buat absen baru
+        try {
+            if ($request->approval == "Yes") {
+                Absensi::create([
+                    'user_id' => $attendanceRequest->user_id,
+                    'absen_ke' => 1,
+                    'keterangan' => "Tepat Waktu",
+                    'latitude' => -6.9328394,
+                    'longitude' => 107.771067,
+                    'scanned_at' => $attendanceRequest->tanggal_pengajuan,
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'failed' => true,
+                'error' => $e,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'id' => $request->attendanceReqId,
+            'diterima' => $request->approval,
+            'statusTerbaru' => $request->updatedStatus,
         ]);
     }
 }

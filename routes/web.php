@@ -47,6 +47,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/admin/kriteria-penilaian', [KriteriaPenilaianController::class, 'index']);
 
     Route::get('/admin/pengajuan-absen', [PengajuanAbsenController::class, 'index'])->name('admin.pengajuan-absen');
+    Route::put('/admin/pengajuan-absen/{id}', [PengajuanAbsenController::class, 'approveOrReject'])->name('admin.pengajuan-acc-atau-tolak');
 });
 
 Route::middleware(['auth', 'is_pegawai'])->group(function () {
