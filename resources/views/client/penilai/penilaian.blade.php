@@ -12,6 +12,63 @@
 
 @section('content')
     <div class="container-fluid d-flex flex-column">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-end align-items-end rounded">
+                        <form class="d-flex align-items-end gap-3" action="{{ route('penilai.index') }}" method="GET">
+                            <div>
+                                <label class="form-label">Bulan Awal</label>
+                                <select class="form-select" name="bulan_awal" required id="bulan_awal">
+                                    <option selected disabled value="">Pilih</option>
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        <option value="{{ $i }}"
+                                            @if (request('bulan_awal') == $i) selected @endif>
+                                            {{ $i }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="form-label">Bulan Akhir</label>
+                                <select class="form-select" name="bulan_akhir" required id="bulan_akhir">
+                                    <option selected disabled value="">Pilih</option>
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        <option value="{{ $i }}"
+                                            @if (request('bulan_akhir') == $i) selected @endif>
+                                            {{ $i }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="form-label">Tahun</label>
+                                <select class="form-select" name="tahun" required id="tahun">
+                                    <option selected disabled value="">Pilih</option>
+                                    @php
+                                        $currentYear = date('Y');
+                                        $startYear = $currentYear - 5; // 5 tahun kebelakang
+                                        $endYear = $currentYear + 5; // 5 tahun kedepan
+                                    @endphp
+                                    @for ($year = $startYear; $year <= $endYear; $year++)
+                                        <option value="{{ $year }}"
+                                            @if (request('tahun') == $year) selected @endif>
+                                            {{ $year }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+
+                            <div>
+                                <button class="btn btn-primary" type="submit" style="height: 38px;">
+                                    <i class="fa fa-filter me-2"></i> Filter
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div class="container-fluid card">
             <div class="card-header pb-0 card-no-border">
