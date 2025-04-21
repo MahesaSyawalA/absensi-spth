@@ -41801,6 +41801,42 @@ footer {
   animation: prixClipFix 2s linear infinite ;
 }
 
+.custom-loader-white {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: relative;
+  animation: rotate 1s linear infinite;
+}
+
+.custom-loader-white::before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 5px solid #FFFFFF;
+  animation: prixClipFix 2s linear infinite ;
+}
+
+.custom-loader-white-small {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  position: relative;
+  animation: rotate 1s linear infinite;
+}
+
+.custom-loader-white-small::before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 5px solid #FFFFFF;
+  animation: prixClipFix 2s linear infinite ;
+}
+
 @keyframes rotate {
   100%   {transform: rotate(360deg)}
 }
@@ -75159,3 +75195,10 @@ body[class*=dark-] .for-light {
 	4.1. Dark CSS ends
 ==========================**/
 /*# sourceMappingURL=style.css.map */
+
+
+
+/* CUSTOM CSS */
+.nav-tabs .nav-link.active {
+  color: #7366ff; /* change this to your desired color */
+}

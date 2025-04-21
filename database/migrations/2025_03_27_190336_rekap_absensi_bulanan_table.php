@@ -13,7 +13,7 @@ return new class extends Migration
     {
         //
         Schema::create('rekapan_absensi_bulanan', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->uuid('user_id');
             $table->integer('bulan');
             $table->integer('tahun');

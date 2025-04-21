@@ -61,4 +61,11 @@ class AbsensiController extends Controller
             'user' => Auth::user(),
         ]);
     }
+
+    public function absenKhusus()
+    {
+        return view('client.absensiKhusus', [
+            'user' => Auth::user(),
+        ]);
+    }
 }
