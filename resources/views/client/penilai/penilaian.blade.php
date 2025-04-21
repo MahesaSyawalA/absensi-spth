@@ -54,6 +54,42 @@
 
         <div class="container-fluid card">
             <div class="card-header pb-0 card-no-border">
+                <h5>List Total Point Absensi</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive custom-scrollbar">
+                    <table class="display table-striped border" id="riwayatPenilaian">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>NIP</th>
+                                <th>Bulan</th>
+                                <th>Tahun</th>
+                                <th>Total Absen</th>
+                                <th>Total Poin</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($rekapanAbsensi as $data)
+                                <tr>
+                                    <td>{{ $data->user->nama }}</td>
+                                    <td>{{ $data->user->jabatan }}</td>
+                                    <td>{{ $data->user->nip }}</td>
+                                    <td>{{ $data->bulan }}</td>
+                                    <td>{{ $data->tahun }}</td>
+                                    <td>{{ $data->total_absen }}</td>
+                                    <td>{{ $data->total_poin }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid card">
+            <div class="card-header pb-0 card-no-border">
                 <h5>List Penilaian Masyarakat</h5>
             </div>
             <div class="card-body">

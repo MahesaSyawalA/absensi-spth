@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\PenilaianKhusus;
+use App\Models\RekapanAbsensiBulanan;
 use App\Models\RekapanNilaiAkhir;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,8 @@ class PenilaiController extends Controller
         }]);
 
         $penilaianAkhir = $penilaianAkhirQuery->orderByDesc('nilai_akhir')->get() ?? collect();
+
+        $rekapanAbsensi = RekapanAbsensiBulanan::with('user')->get();
 
         $users = User::where('role', 'pegawai')
         ->select('id','slug', 'nama', 'nip', 'jabatan')
@@ -40,6 +43,7 @@ class PenilaiController extends Controller
             'users' => $users,
             'riwayatPenilaian' => $riwayatPenilaian,
             'penilaianAkhir' => $penilaianAkhir,
+            'rekapanAbsensi' => $rekapanAbsensi
         ];
         return view('client.penilai.penilaian',$data);
     }
