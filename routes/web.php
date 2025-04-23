@@ -57,6 +57,7 @@ Route::middleware(['auth', 'is_pegawai'])->group(function () {
     Route::get('/staff/profile', [ProfileController::class, 'index']);
     Route::post('/attendance', [ScanController::class, 'validateAttendance'])->name('absen.scan');
     Route::post('/attendance/absen-khusus', [PengajuanAbsenController::class, 'store'])->name('absen_khusus.store');
+    Route::get('/attendance/absen-khusus/history/{user_id}', [PengajuanAbsenController::class, 'history'])->name('absen_khusus.history');
 });
 
 Route::get('/penilai', [PenilaiController::class, 'index'])->middleware('is_penilai')->name('penilai.index');

@@ -11,11 +11,21 @@ class PengajuanAbsenController extends Controller
 {
     public function index()
     {
-
         $absen_data = PengajuanAbsen::all()->where('status', '=', 'Pending');
 
         return view('admin.requestAbsen', [
             'absen_data' => $absen_data,
+        ]);
+    }
+
+    public function history($user_id)
+    {
+        $history_pengajuan_user = PengajuanAbsen::all()
+        ->where('status', '=', 'Pending')
+        ->where('id', $user_id);
+
+        return view('client.absensiKhususHistory', [
+            'data' => $history_pengajuan_user,
         ]);
     }
 
